@@ -24,7 +24,7 @@ class StudentAuthController extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => trans('messages.success.student.logged_in'),
+            'message' => trans('messages.success.logged_in'),
             'data' => $result
         ]);
     }
@@ -35,7 +35,7 @@ class StudentAuthController extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => trans('messages.success.student.logged_out')
+            'message' => trans('messages.success.logged_out')
         ]);
     }
 
@@ -45,7 +45,7 @@ class StudentAuthController extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => trans('messages.success.student.profile_fetched'),
+            'message' => trans('messages.success.profile_fetched'),
             'data' => [
                 'student' => $student
             ]

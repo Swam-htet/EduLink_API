@@ -12,12 +12,12 @@ return [
 
     // Success messages
     'success' => [
-        'student' => [
-            'registered' => 'Student registered successfully',
-            'logged_in' => 'Logged in successfully',
-            'logged_out' => 'Successfully logged out',
-            'profile_fetched' => 'Student profile fetched successfully',
-        ],
+        'student_registered' => 'Student registered successfully',
+        'logged_in' => 'Logged in successfully',
+        'logged_out' => 'Successfully logged out',
+        'student_updated' => 'Student updated successfully',
+        'student_deleted' => 'Student deleted successfully',
+        'profile_fetched' => 'Profile fetched successfully',
     ],
 
     // Error messages
@@ -27,6 +27,11 @@ return [
         'unauthorized' => 'You are not authorized to perform this action',
         'registration_failed' => 'Registration failed',
         'login_failed' => 'Login failed',
+        'unauthenticated' => 'Unauthenticated. Please login to continue.',
+        'resource_not_found' => 'The requested resource was not found.',
+        'endpoint_not_found' => 'The requested endpoint does not exist.',
+        'validation_failed' => 'The given data was invalid.',
+        'server_error' => 'An unexpected error occurred. Please try again later.',
     ],
 
     // Email subjects

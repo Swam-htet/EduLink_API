@@ -29,7 +29,7 @@ class StudentController extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => trans('messages.success.student.registered'),
+            'message' => trans('messages.success.student_registered'),
             'data' => [
                 'token' => $token,
                 'student' => $student
