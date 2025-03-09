@@ -15,25 +15,22 @@ use App\Services\StudentAuthService;
 use App\Services\StudentManagementService;
 use App\Services\StudentRegistrationService;
 use Illuminate\Support\ServiceProvider;
+use App\Services\TokenService;
+use App\Contracts\Services\TokenServiceInterface;
 
 class CustomAuthServiceProvider extends ServiceProvider
 {
-    /**
-     * Register services.
-     */
     public function register(): void
     {
-        // Register repositories
+
         $this->app->singleton(StudentRepositoryInterface::class, function ($app) {
             return new StudentRepository();
         });
 
-        // Register mail service
         $this->app->singleton(MailServiceInterface::class, function ($app) {
             return new MailService();
         });
 
-        // Register StudentRegistrationService
         $this->app->singleton(StudentRegistrationServiceInterface::class, function ($app) {
             return new StudentRegistrationService(
                 $app->make(MailServiceInterface::class),
@@ -41,31 +38,29 @@ class CustomAuthServiceProvider extends ServiceProvider
             );
         });
 
-        // Register StudentAuthService
         $this->app->singleton(StudentAuthServiceInterface::class, function ($app) {
             return new StudentAuthService(
                 $app->make(StudentRepositoryInterface::class)
             );
         });
 
-        // Register StudentManagementService
         $this->app->singleton(StudentManagementServiceInterface::class, function ($app) {
             return new StudentManagementService(
                 $app->make(StudentRepositoryInterface::class)
             );
         });
 
-        // Register StaffAuthService
         $this->app->singleton(StaffAuthServiceInterface::class, function ($app) {
             return new StaffAuthService();
         });
+
+        $this->app->singleton(TokenServiceInterface::class, function ($app) {
+            return new TokenService();
+        });
     }
 
-    /**
-     * Bootstrap services.
-     */
     public function boot(): void
     {
-        //
+
     }
 }

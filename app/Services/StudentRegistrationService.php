@@ -14,22 +14,10 @@ use Illuminate\Support\Facades\Log;
 
 class StudentRegistrationService implements StudentRegistrationServiceInterface
 {
-    /**
-     * @var MailServiceInterface
-     */
     protected $mailService;
 
-    /**
-     * @var StudentRepositoryInterface
-     */
     protected $studentRepository;
 
-    /**
-     * StudentRegistrationService constructor.
-     *
-     * @param MailServiceInterface $mailService
-     * @param StudentRepositoryInterface $studentRepository
-     */
     public function __construct(
         MailServiceInterface $mailService,
         StudentRepositoryInterface $studentRepository
@@ -38,13 +26,6 @@ class StudentRegistrationService implements StudentRegistrationServiceInterface
         $this->studentRepository = $studentRepository;
     }
 
-    /**
-     * Register a new student with transaction and email notification
-     *
-     * @param RegisterRequest $request
-     * @return Student
-     * @throws Exception
-     */
     public function registerStudent(RegisterRequest $request): Student
     {
         try {

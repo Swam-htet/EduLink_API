@@ -17,7 +17,7 @@ class LoginRequest extends FormRequest
     {
         return [
             'email' => 'required|email|exists:students,email',
-            'password' => 'required',
+            'password' => 'required|min:12|max:16|regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{12,16}$/',
         ];
     }
 
@@ -28,14 +28,18 @@ class LoginRequest extends FormRequest
             'email.email' => 'Please provide a valid email address',
             'email.exists' => 'This email is not registered',
             'password.required' => 'Password is required',
+            'password.min' => 'Password must be at least 12 characters',
+            'password.max' => 'Password cannot exceed 16 characters',
+            'password.regex' => 'Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character',
         ];
     }
+
 
     protected function failedValidation(Validator $validator)
     {
         throw new HttpResponseException(response()->json([
             'success' => false,
-            'message' => 'Validation errors',
+            'message' => trans('messages.error.login_failed'),
             'errors' => $validator->errors()
         ], 422));
     }

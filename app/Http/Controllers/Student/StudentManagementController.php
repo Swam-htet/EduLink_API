@@ -10,26 +10,13 @@ use Illuminate\Validation\ValidationException;
 
 class StudentManagementController extends Controller
 {
-    /**
-     * @var StudentManagementServiceInterface
-     */
     protected $studentManagementService;
 
-    /**
-     * StudentManagementController constructor.
-     *
-     * @param StudentManagementServiceInterface $studentManagementService
-     */
     public function __construct(StudentManagementServiceInterface $studentManagementService)
     {
         $this->studentManagementService = $studentManagementService;
     }
 
-    /**
-     * Get all students
-     *
-     * @return JsonResponse
-     */
     public function index(): JsonResponse
     {
         $students = $this->studentManagementService->getAllStudents();
@@ -42,12 +29,6 @@ class StudentManagementController extends Controller
         ]);
     }
 
-    /**
-     * Get a student by ID
-     *
-     * @param string $id
-     * @return JsonResponse
-     */
     public function show(string $id): JsonResponse
     {
         $student = $this->studentManagementService->getStudentById($id);
@@ -60,14 +41,6 @@ class StudentManagementController extends Controller
         ]);
     }
 
-    /**
-     * Update a student
-     *
-     * @param Request $request
-     * @param string $id
-     * @return JsonResponse
-     * @throws ValidationException
-     */
     public function update(Request $request, string $id): JsonResponse
     {
         $validatedData = $request->validate([
@@ -91,26 +64,20 @@ class StudentManagementController extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => 'Student updated successfully',
+            'message' => trans('messages.success.student_updated'),
             'data' => [
                 'student' => $student
             ]
         ]);
     }
 
-    /**
-     * Delete a student
-     *
-     * @param string $id
-     * @return JsonResponse
-     */
     public function destroy(string $id): JsonResponse
     {
         $this->studentManagementService->deleteStudent($id);
 
         return response()->json([
             'success' => true,
-            'message' => 'Student deleted successfully'
+            'message' => trans('messages.success.student_deleted')
         ]);
     }
 }

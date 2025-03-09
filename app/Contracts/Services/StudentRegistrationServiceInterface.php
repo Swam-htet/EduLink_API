@@ -7,11 +7,5 @@ use App\Models\Student;
 
 interface StudentRegistrationServiceInterface
 {
-    /**
-     * Register a new student with transaction and email notification
-     *
-     * @param RegisterRequest $request
-     * @return Student
-     */
     public function registerStudent(RegisterRequest $request): Student;
 }

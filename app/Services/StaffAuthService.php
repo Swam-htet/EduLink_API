@@ -12,12 +12,7 @@ use Illuminate\Validation\ValidationException;
 
 class StaffAuthService implements StaffAuthServiceInterface
 {
-    /**
-     * Register a new staff member
-     *
-     * @param RegisterRequest $request
-     * @return array
-     */
+
     public function register(RegisterRequest $request): array
     {
         $validatedData = $request->validated();
@@ -40,12 +35,7 @@ class StaffAuthService implements StaffAuthServiceInterface
         ];
     }
 
-    /**
-     * Login a staff member
-     *
-     * @param LoginRequest $request
-     * @return array
-     */
+
     public function login(LoginRequest $request): array
     {
         $staff = Staff::where('email', $request->email)->first();
@@ -56,8 +46,7 @@ class StaffAuthService implements StaffAuthServiceInterface
             ]);
         }
 
-        // Generate token with staff and admin scopes
-        $token = $staff->createToken('Staff Access Token', ['staff', 'admin'])->accessToken;
+        $token = $staff->createToken('Staff Access Token', ['staff'])->accessToken;
 
         return [
             'token' => $token,
@@ -65,12 +54,6 @@ class StaffAuthService implements StaffAuthServiceInterface
         ];
     }
 
-    /**
-     * Logout a staff member
-     *
-     * @param Request $request
-     * @return bool
-     */
     public function logout(Request $request): bool
     {
         return $request->user()->token()->revoke();
