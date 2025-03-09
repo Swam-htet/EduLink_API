@@ -5,7 +5,7 @@ services:
         build:
             context: .
             dockerfile: Dockerfile
-        container_name: laravel_api
+        container_name: edulink_api
         restart: unless-stopped
         working_dir: /var/www/
         volumes:
@@ -19,7 +19,7 @@ services:
 
     nginx:
         image: nginx:alpine
-        container_name: laravel_nginx
+        container_name: edulink_nginx
         restart: unless-stopped
         ports:
             - "8000:80"
@@ -33,7 +33,7 @@ services:
 
     db:
         image: mysql:8.0
-        container_name: laravel_db
+        container_name: edulink_db
         restart: unless-stopped
         environment:
             MYSQL_DATABASE: ${DB_DATABASE}
@@ -51,7 +51,7 @@ services:
 
     redis:
         image: redis:alpine
-        container_name: laravel_redis
+        container_name: edulink_redis
         restart: unless-stopped
         ports:
             - "6379:6379"
@@ -60,7 +60,7 @@ services:
 
     minio:
         image: minio/minio
-        container_name: laravel_minio
+        container_name: edulink_minio
         ports:
             - "9000:9000"
             - "9001:9001"
@@ -75,7 +75,7 @@ services:
 
     mailhog:
         image: mailhog/mailhog
-        container_name: laravel_mailhog
+        container_name: edulink_mailhog
         ports:
             - "1025:1025"
             - "8025:8025"

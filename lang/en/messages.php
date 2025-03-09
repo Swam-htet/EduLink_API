@@ -32,6 +32,14 @@ return [
         'endpoint_not_found' => 'The requested endpoint does not exist.',
         'validation_failed' => 'The given data was invalid.',
         'server_error' => 'An unexpected error occurred. Please try again later.',
+        'tenant_not_found' => 'Tenant not found',
+
+    ],
+    'errors' => [
+        '404' => 'The requested resource was not found.',
+        '401' => 'Unauthorized access.',
+        '403' => 'You do not have permission to access this resource.',
+        '500' => 'An error occurred.',
     ],
 
     // Email subjects
