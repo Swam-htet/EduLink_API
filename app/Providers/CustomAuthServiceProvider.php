@@ -23,40 +23,6 @@ class CustomAuthServiceProvider extends ServiceProvider
     public function register(): void
     {
 
-        $this->app->singleton(StudentRepositoryInterface::class, function ($app) {
-            return new StudentRepository();
-        });
-
-        $this->app->singleton(MailServiceInterface::class, function ($app) {
-            return new MailService();
-        });
-
-        $this->app->singleton(StudentRegistrationServiceInterface::class, function ($app) {
-            return new StudentRegistrationService(
-                $app->make(MailServiceInterface::class),
-                $app->make(StudentRepositoryInterface::class)
-            );
-        });
-
-        $this->app->singleton(StudentAuthServiceInterface::class, function ($app) {
-            return new StudentAuthService(
-                $app->make(StudentRepositoryInterface::class)
-            );
-        });
-
-        $this->app->singleton(StudentManagementServiceInterface::class, function ($app) {
-            return new StudentManagementService(
-                $app->make(StudentRepositoryInterface::class)
-            );
-        });
-
-        $this->app->singleton(StaffAuthServiceInterface::class, function ($app) {
-            return new StaffAuthService();
-        });
-
-        $this->app->singleton(TokenServiceInterface::class, function ($app) {
-            return new TokenService();
-        });
     }
 
     public function boot(): void

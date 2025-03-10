@@ -1,0 +1,40 @@
+<?php
+
+namespace App\Models\Tenants;
+
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+
+class Course extends Model
+{
+    use SoftDeletes;
+
+    protected $fillable = [
+        'name',
+        'code',
+        'description',
+        'duration',
+        'status',
+    ];
+
+    protected $casts = [
+        'duration' => 'integer',
+    ];
+
+    // Relationships
+    public function subjects(): HasMany
+    {
+        return $this->hasMany(Subject::class);
+    }
+
+    public function students(): HasMany
+    {
+        return $this->hasMany(Student::class);
+    }
+
+    public function classes(): HasMany
+    {
+        return $this->hasMany(Classes::class);
+    }
+}

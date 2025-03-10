@@ -1,66 +1,255 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# EduLink API
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+EduLink API is a multi-tenant education management system API that helps educational institutions manage their courses, students, staff, classes, and attendance.
 
-## About Laravel
+## System Requirements
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+-   Docker and Docker Compose
+-   Git
+-   Composer (for local development)
+-   PHP 8.1 or higher (for local development)
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## Project Structure
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+The project follows a multi-tenant architecture where each tenant has its own:
 
-## Learning Laravel
+-   Course management
+-   Student management
+-   Staff/Tutor management
+-   Class scheduling
+-   Attendance tracking
+-   Enrollment management
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+## Getting Started
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+### 1. Clone the Repository
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+```bash
+git clone <repository-url>
+cd edu_link_api
+```
 
-## Laravel Sponsors
+### 2. Environment Setup
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+Copy the example environment file:
 
-### Premium Partners
+```bash
+cp .env.example .env
+```
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+Update the following variables in `.env`:
+
+```env
+DB_CONNECTION=mysql
+DB_HOST=mysql
+DB_PORT=3306
+DB_DATABASE=edu_link
+DB_USERNAME=your_username
+DB_PASSWORD=your_password
+```
+
+### 3. Docker Setup
+
+The project uses Docker for containerization. To start the services:
+
+```bash
+docker-compose up -d
+```
+
+This will start the following services:
+
+-   PHP-FPM
+-   Nginx
+-   MySQL
+-   Redis (for caching)
+
+### 4. MySQL Database Setup
+
+The project includes a `mysql.sql` file that contains:
+
+-   Central database creation (`central_edulink`)
+-   Sample tenant databases creation
+-   User privileges setup
+-   Initial tenant table schema
+-   Sample tenant data
+
+To initialize the database:
+
+```bash
+# Copy the SQL file to MySQL container
+docker-compose cp mysql.sql mysql:/mysql.sql
+
+# Execute the SQL file
+docker-compose exec mysql mysql -u root -p < mysql.sql
+```
+
+The `mysql.sql` file handles:
+
+-   Creating the central database (`central_edulink`)
+-   Creating sample tenant databases:
+    -   `uog_edulink` (University of Glasgow)
+    -   `uoe_edulink` (University of Edinburgh)
+    -   `uoa_edulink` (University of Aberdeen)
+    -   `uos_edulink` (University of Strathclyde)
+    -   `usa_edulink` (University of St Andrews)
+-   Setting up application user (`edu_link_admin`) with necessary permissions
+-   Creating the tenants table in the central database
+-   Inserting sample tenant records
+
+Database User Configuration:
+
+```sql
+Username: edu_link_admin
+Password: edu_link_admin
+Privileges: ALL PRIVILEGES on tenant databases, CREATE privilege for new tenants
+```
+
+To manually connect to MySQL:
+
+```bash
+# Connect to MySQL container
+docker-compose exec mysql mysql -u edu_link_admin -p
+
+# List databases
+SHOW DATABASES;
+
+# Switch to central database
+USE central_edulink;
+
+# View tenants
+SELECT * FROM tenants;
+```
+
+### 5. Database Migrations
+
+The project uses two types of migrations:
+
+1. Central database migrations (for tenant management)
+2. Tenant-specific migrations (for educational data)
+
+#### Running Migrations
+
+First, run the central migrations:
+
+```bash
+docker-compose exec app php artisan migrate
+```
+
+For tenant migrations, use:
+
+```bash
+docker-compose exec app php artisan tenants:migrate
+```
+
+Migration files are organized as follows:
+
+-   Central migrations: `database/migrations/`
+-   Tenant migrations: `database/migrations/tenants/`
+
+### 6. Database Seeding (Optional)
+
+To seed the database with sample data:
+
+```bash
+# Central database seeding
+docker-compose exec app php artisan db:seed
+
+# Tenant database seeding
+docker-compose exec app php artisan tenants:seed
+```
+
+## API Documentation
+
+API documentation is available at:
+
+-   Development: `http://localhost:8000/api/documentation`
+-   Production: `https://your-domain.com/api/documentation`
+
+## Tenant Management
+
+### Creating a New Tenant
+
+```bash
+docker-compose exec app php artisan tenant:create
+```
+
+### Running Migrations for Specific Tenant
+
+```bash
+docker-compose exec app php artisan tenants:migrate --tenant=tenant_id
+```
+
+## Development Guidelines
+
+### Adding New Migrations
+
+1. For central database:
+
+```bash
+docker-compose exec app php artisan make:migration create_central_table
+```
+
+2. For tenant database:
+
+```bash
+docker-compose exec app php artisan make:migration tenant/create_tenant_table
+```
+
+### Model Structure
+
+Tenant models are located in:
+
+-   `app/Models/Tenants/`
+
+Each model includes:
+
+-   Soft deletes
+-   Proper relationships
+-   Fillable attributes
+-   Type casting
+
+## Troubleshooting
+
+### Common Issues
+
+1. Database connection issues:
+
+```bash
+docker-compose exec app php artisan config:clear
+docker-compose exec app php artisan cache:clear
+```
+
+2. Permission issues:
+
+```bash
+docker-compose exec app chmod -R 777 storage bootstrap/cache
+```
+
+3. Composer issues:
+
+```bash
+docker-compose exec app composer install --no-scripts
+```
+
+### Logs
+
+To view logs:
+
+```bash
+# Application logs
+docker-compose exec app tail -f storage/logs/laravel.log
+
+# Nginx logs
+docker-compose logs -f nginx
+```
 
 ## Contributing
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
-
-## Code of Conduct
-
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+1. Create a feature branch
+2. Make your changes
+3. Run tests
+4. Submit a pull request
 
 ## License
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+[Your License]

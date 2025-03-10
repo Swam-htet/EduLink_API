@@ -55,7 +55,7 @@ class MigrateTenants extends Command
 
                 $result = Artisan::call($command, [
                     '--database' => 'tenant',
-                    '--path' => 'database/migrations/tenant',
+                    '--path' => 'database/migrations/tenants',
                     '--force' => true
                 ]);
 
@@ -91,8 +91,8 @@ class MigrateTenants extends Command
             'host' => 'db',
             'port' => 3306,
             'database' => 'mysql',
-            'username' => 'edu_link_admin',
-            'password' => 'edu_link_admin',
+            'username' => 'root',
+            'password' => env('DB_ROOT_PASSWORD'),
             'charset' => 'utf8mb4',
             'collation' => 'utf8mb4_unicode_ci',
         ];
@@ -101,6 +101,9 @@ class MigrateTenants extends Command
         DB::purge('mysql');
 
         DB::connection('mysql')->statement("CREATE DATABASE IF NOT EXISTS `{$database}`");
+
+        DB::connection('mysql')->statement("GRANT ALL PRIVILEGES ON `{$database}`.* TO 'edu_link_admin'@'%'");
+        DB::connection('mysql')->statement("FLUSH PRIVILEGES");
 
         $this->info("Database {$database} is ready");
     }

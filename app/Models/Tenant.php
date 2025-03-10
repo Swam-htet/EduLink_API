@@ -13,10 +13,11 @@ class Tenant extends Model
         'name',
         'domain',
         'database_name',
-        'is_active',
+        'settings',
+        'status'
     ];
 
     protected $casts = [
-        'is_active' => 'boolean',
+        'settings' => 'array',
     ];
 }
