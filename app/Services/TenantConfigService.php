@@ -3,16 +3,17 @@
 namespace App\Services;
 
 use App\Repositories\TenantConfigRepository;
+use App\Contracts\Services\TenantConfigServiceInterface;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
 
-class TenantConfigService
+class TenantConfigService implements TenantConfigServiceInterface
 {
     protected $repository;
     protected $cachePrefix = 'tenant_config:';
-    protected $cacheTTL = 0; // permanent before cache is flushed(deleted)
+    protected $cacheTTL = 3600; // 1 hour
 
     public function __construct(TenantConfigRepository $repository)
     {

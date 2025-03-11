@@ -4,8 +4,9 @@ namespace App\Repositories;
 
 use App\Models\Tenants\TenantConfig;
 use Illuminate\Database\Eloquent\Collection;
+use App\Contracts\Repositories\TenantConfigRepositoryInterface;
 
-class TenantConfigRepository
+class TenantConfigRepository implements TenantConfigRepositoryInterface
 {
     protected $model;
 

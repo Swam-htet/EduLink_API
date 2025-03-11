@@ -18,6 +18,10 @@ return [
         'student_updated' => 'Student updated successfully',
         'student_deleted' => 'Student deleted successfully',
         'profile_fetched' => 'Profile fetched successfully',
+        'config_created' => 'Configuration created successfully',
+        'config_updated' => 'Configuration updated successfully',
+        'config_deleted' => 'Configuration deleted successfully',
+        'configs_updated' => 'Configurations updated successfully',
     ],
 
     // Error messages

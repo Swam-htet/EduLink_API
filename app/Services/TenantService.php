@@ -5,8 +5,8 @@ namespace App\Services;
 use App\Models\Tenant;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
-
-class TenantService
+use App\Contracts\Services\TenantServiceInterface;
+class TenantService implements TenantServiceInterface
 {
     protected ?Tenant $tenant = null;
 

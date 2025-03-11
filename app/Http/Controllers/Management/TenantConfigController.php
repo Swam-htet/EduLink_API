@@ -2,25 +2,30 @@
 
 namespace App\Http\Controllers\Management;
 
+use App\Contracts\Services\TenantConfigServiceInterface;
 use App\Http\Controllers\Controller;
-use App\Services\TenantConfigService;
-use Illuminate\Http\Request;
+use App\Http\Requests\TenantConfig\{
+    StoreTenantConfigRequest,
+    UpdateTenantConfigRequest,
+    BulkUpdateTenantConfigRequest
+};
+use App\Http\Resources\TenantConfig\{TenantConfigCollection, TenantConfigResource};
 use Illuminate\Http\JsonResponse;
-
+use Illuminate\Http\Response;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 class TenantConfigController extends Controller
 {
-    protected $configService;
-
-    public function __construct(TenantConfigService $configService)
-    {
-        $this->configService = $configService;
-    }
+    public function __construct(
+        protected TenantConfigServiceInterface $configService
+    ) {}
 
     public function index(): JsonResponse
     {
+        $configs = $this->configService->getAllConfigs();
         return response()->json([
             'success' => true,
-            'data' => $this->configService->getAllConfigs()
+            'data' => new TenantConfigCollection($configs)
         ]);
     }
 
@@ -28,89 +33,60 @@ class TenantConfigController extends Controller
     {
         $config = $this->configService->getConfigByKey($key);
 
-        if ($config === null) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Configuration not found'
-            ], 404);
+        if (!$config) {
+            throw new NotFoundHttpException(trans('messages.error.resource_not_found'));
         }
 
         return response()->json([
             'success' => true,
-            'data' => $config
+            'data' => new TenantConfigResource($config)
         ]);
     }
 
     public function getByGroup(string $group): JsonResponse
     {
+        $configs = $this->configService->getConfigsByGroup($group);
         return response()->json([
             'success' => true,
-            'data' => $this->configService->getConfigsByGroup($group)
+            'data' => new TenantConfigCollection($configs)
         ]);
     }
 
-    public function store(Request $request): JsonResponse
+    public function store(StoreTenantConfigRequest $request): JsonResponse
     {
-        try {
-            $config = $this->configService->createConfig($request->all());
-            return response()->json([
-                'success' => true,
-                'data' => $config,
-                'message' => 'Configuration created successfully'
-            ], 201);
-        } catch (\Exception $e) {
-            return response()->json([
-                'success' => false,
-                'message' => $e->getMessage()
-            ], 400);
-        }
+        $config = $this->configService->createConfig($request->validated());
+
+        return response()->json([
+            'success' => true,
+            'data' => new TenantConfigResource($config),
+            'message' => trans('messages.success.config_created')
+        ], Response::HTTP_CREATED);
     }
 
-    public function update(Request $request, string $key): JsonResponse
+    public function update(UpdateTenantConfigRequest $request, string $key): JsonResponse
     {
-        try {
-            $success = $this->configService->updateConfig($key, $request->all());
-            return response()->json([
-                'success' => $success,
-                'message' => $success ? 'Configuration updated successfully' : 'Configuration not found'
-            ], $success ? 200 : 404);
-        } catch (\Exception $e) {
-            return response()->json([
-                'success' => false,
-                'message' => $e->getMessage()
-            ], 400);
-        }
+        $this->configService->updateConfig($key, $request->validated());
+        return response()->json([
+            'success' => true,
+            'message' => trans('messages.success.config_updated')
+        ]);
     }
 
     public function destroy(string $key): JsonResponse
     {
-        try {
-            $success = $this->configService->deleteConfig($key);
-            return response()->json([
-                'success' => $success,
-                'message' => $success ? 'Configuration deleted successfully' : 'Configuration not found'
-            ], $success ? 200 : 404);
-        } catch (\Exception $e) {
-            return response()->json([
-                'success' => false,
-                'message' => $e->getMessage()
-            ], 400);
-        }
+        $this->configService->deleteConfig($key);
+        return response()->json([
+            'success' => true,
+            'message' => trans('messages.success.config_deleted')
+        ]);
     }
 
-    public function bulkUpdate(Request $request): JsonResponse
+    public function bulkUpdate(BulkUpdateTenantConfigRequest $request): JsonResponse
     {
-        try {
-            $success = $this->configService->bulkUpdateConfigs($request->all());
-            return response()->json([
-                'success' => $success,
-                'message' => 'Configurations updated successfully'
-            ]);
-        } catch (\Exception $e) {
-            return response()->json([
-                'success' => false,
-                'message' => $e->getMessage()
-            ], 400);
-        }
+        $this->configService->bulkUpdateConfigs($request->validated());
+        return response()->json([
+            'success' => true,
+            'message' => trans('messages.success.configs_updated')
+        ]);
     }
 }

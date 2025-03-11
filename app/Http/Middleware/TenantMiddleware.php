@@ -38,6 +38,9 @@ class TenantMiddleware
             ], Response::HTTP_NOT_FOUND);
         }
 
+        // inject tenant info to request
+        $request->attributes->set('tenant', $tenant);
+
         return $next($request);
     }
 }
