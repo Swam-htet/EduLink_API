@@ -2,13 +2,13 @@
 
 namespace App\Providers;
 
-use App\Services\TenantService;
+use App\Services\Common\TenantService;
 use Illuminate\Support\ServiceProvider;
-use App\Contracts\Services\TenantServiceInterface;
+use App\Contracts\Services\Common\TenantServiceInterface;
 use App\Contracts\Services\TenantConfigServiceInterface;
 use App\Services\TenantConfigService;
-use App\Contracts\Services\MailServiceInterface;
-use App\Services\MailService;
+use App\Contracts\Services\Common\MailServiceInterface;
+use App\Services\Common\MailService;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -19,6 +19,8 @@ class AppServiceProvider extends ServiceProvider
 
         // common services
         $this->app->singleton(MailServiceInterface::class, MailService::class);
+
+
 
         // tenant services
         $this->app->singleton(TenantConfigServiceInterface::class, TenantConfigService::class);

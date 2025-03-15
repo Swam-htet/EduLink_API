@@ -1,11 +1,13 @@
 <?php
 
-namespace App\Services;
+namespace App\Services\Common;
 
 use App\Models\Tenant;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
-use App\Contracts\Services\TenantServiceInterface;
+use App\Contracts\Services\Common\TenantServiceInterface;
+
+
 class TenantService implements TenantServiceInterface
 {
     protected ?Tenant $tenant = null;

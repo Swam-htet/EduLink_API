@@ -12,7 +12,8 @@ RUN apt-get update && apt-get install -y \
     libzip-dev
 
 # Install Redis extension
-RUN pecl install redis && docker-php-ext-enable redis
+RUN pecl install redis \
+    && docker-php-ext-enable redis
 
 # Install ZIP extension
 RUN docker-php-ext-install zip

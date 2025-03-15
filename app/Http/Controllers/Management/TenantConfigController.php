@@ -34,7 +34,7 @@ class TenantConfigController extends Controller
         $config = $this->configService->getConfigByKey($key);
 
         if (!$config) {
-            throw new NotFoundHttpException(trans('messages.error.resource_not_found'));
+            throw new NotFoundHttpException("Configuration not found");
         }
 
         return response()->json([
@@ -59,17 +59,8 @@ class TenantConfigController extends Controller
         return response()->json([
             'success' => true,
             'data' => new TenantConfigResource($config),
-            'message' => trans('messages.success.config_created')
+            'message' => "Configuration created successfully"
         ], Response::HTTP_CREATED);
-    }
-
-    public function update(UpdateTenantConfigRequest $request, string $key): JsonResponse
-    {
-        $this->configService->updateConfig($key, $request->validated());
-        return response()->json([
-            'success' => true,
-            'message' => trans('messages.success.config_updated')
-        ]);
     }
 
     public function destroy(string $key): JsonResponse
@@ -77,16 +68,7 @@ class TenantConfigController extends Controller
         $this->configService->deleteConfig($key);
         return response()->json([
             'success' => true,
-            'message' => trans('messages.success.config_deleted')
-        ]);
-    }
-
-    public function bulkUpdate(BulkUpdateTenantConfigRequest $request): JsonResponse
-    {
-        $this->configService->bulkUpdateConfigs($request->validated());
-        return response()->json([
-            'success' => true,
-            'message' => trans('messages.success.configs_updated')
+            'message' => "Configuration deleted successfully"
         ]);
     }
 }

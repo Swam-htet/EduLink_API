@@ -4,10 +4,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Management\TenantConfigController;
 use App\Http\Resources\TenantResource;
-use App\Contracts\Services\MailServiceInterface;
 use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Redis;
-use App\Jobs\SendWelcomeEmail;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\WelcomeMail;
 
 // test routes
 Route::group(['prefix' => 'test'], function () {
@@ -17,9 +16,8 @@ Route::group(['prefix' => 'test'], function () {
 
     // test mail with queue
     Route::post('/mail', function (Request $request) {
-        SendWelcomeEmail::dispatch('test@test.com', 'Test User')
-            ->onQueue('emails');
-
+        // todo : need to implement queue for better performance
+        Mail::to('test@test.com')->send(new WelcomeMail('test@test.com', 'Test User'));
         return response()->json(['message' => 'Mail queued for sending']);
     });
 
@@ -45,6 +43,15 @@ Route::group(['prefix' => 'test'], function () {
         ]);
     });
 
+    // test file upload
+    Route::post('/upload', function (Request $request) {
+        $file = $request->file('file');
+        dd($file);
+
+        return response()->json(['message' => 'File uploaded successfully']);
+    });
+
+
 });
 
 Route::prefix('management')->group(function () {
@@ -53,8 +60,6 @@ Route::prefix('management')->group(function () {
         Route::get('/{key}', [TenantConfigController::class, 'show']);
         Route::get('/group/{group}', [TenantConfigController::class, 'getByGroup']);
         Route::post('/', [TenantConfigController::class, 'store']);
-        Route::put('/{key}', [TenantConfigController::class, 'update']);
         Route::delete('/{key}', [TenantConfigController::class, 'destroy']);
-        Route::post('/bulk-update', [TenantConfigController::class, 'bulkUpdate']);
     });
 });

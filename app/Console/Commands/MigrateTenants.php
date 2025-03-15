@@ -3,7 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Models\Tenant;
-use App\Services\TenantService;
+use App\Contracts\Services\Common\TenantServiceInterface;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\DB;
@@ -26,7 +26,7 @@ class MigrateTenants extends Command
 
     protected $tenantService;
 
-    public function __construct(TenantService $tenantService)
+    public function __construct(TenantServiceInterface $tenantService)
     {
         parent::__construct();
         $this->tenantService = $tenantService;

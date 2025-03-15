@@ -2,7 +2,7 @@
 
 namespace App\Http\Middleware;
 
-use App\Services\TenantService;
+use App\Contracts\Services\Common\TenantServiceInterface;
 use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -11,7 +11,7 @@ class TenantMiddleware
 {
     protected $tenantService;
 
-    public function __construct(TenantService $tenantService)
+    public function __construct(TenantServiceInterface $tenantService)
     {
         $this->tenantService = $tenantService;
     }

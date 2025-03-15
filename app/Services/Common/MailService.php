@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services;
+namespace App\Services\Common;
 
 use App\Contracts\Services\MailServiceInterface;
 use App\Mail\WelcomeMail;

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Contracts\Services;
+namespace App\Contracts\Services\Common;
 
 use App\Models\Tenant;
 
