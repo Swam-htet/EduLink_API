@@ -2,34 +2,45 @@
 
 namespace App\Models\Tenants;
 
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
+use App\Models\Tenants\Traits\UsesTenantConnection;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Laravel\Passport\HasApiTokens;
 
-class Student extends Model
+class Student extends Authenticatable
 {
-    use SoftDeletes;
+    use HasApiTokens, Notifiable, SoftDeletes, UsesTenantConnection;
 
     protected $fillable = [
-        'student_id',
         'name',
         'email',
+        'password',
         'phone',
         'gender',
-        'date_of_birth',
         'address',
-        'course_id',
-        'enrollment_date',
+        'date_of_birth',
+        'student_id',
         'status',
+        'gender',
+        'enrollment_date',
         'guardian_name',
         'guardian_phone',
         'guardian_relationship',
         'additional_info',
     ];
 
+    protected $hidden = [
+        'password',
+        'remember_token',
+    ];
+
     protected $casts = [
+        'email_verified_at' => 'datetime',
         'date_of_birth' => 'date',
+        'password' => 'hashed',
         'enrollment_date' => 'date',
         'additional_info' => 'json',
     ];

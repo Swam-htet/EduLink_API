@@ -10,19 +10,19 @@ return new class extends Migration
     {
         Schema::create('staff', function (Blueprint $table) {
             $table->id();
-            $table->string('staff_id')->unique();
             $table->string('name');
             $table->string('email')->unique();
             $table->string('phone')->nullable();
+            $table->string('password');
             $table->enum('gender', ['male', 'female', 'other'])->nullable();
+            $table->string('nrc')->nullable();
+            $table->string('profile_photo')->nullable();
             $table->date('date_of_birth')->nullable();
             $table->text('address')->nullable();
-            $table->string('position');
-            $table->enum('employment_type', ['full-time', 'part-time', 'contract'])->default('full-time');
+            $table->enum('type', ['teacher', 'admin', 'staff'])->default('staff');
             $table->date('joined_date');
             $table->enum('status', ['active', 'inactive', 'on-leave'])->default('active');
             $table->json('qualifications')->nullable();
-            $table->json('subjects')->nullable(); // Subjects they can teach
             $table->timestamps();
             $table->softDeletes();
         });

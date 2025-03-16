@@ -172,6 +172,7 @@ return [
         App\Providers\AppServiceProvider::class,
         App\Providers\CustomAuthServiceProvider::class,
         App\Providers\PassportServiceProvider::class,
+        App\Providers\MailServiceProvider::class,
     ],
 
     /*

@@ -2,37 +2,46 @@
 
 namespace App\Models\Tenants;
 
-use Illuminate\Database\Eloquent\Model;
+use Laravel\Passport\HasApiTokens;
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use App\Models\Tenants\Traits\UsesTenantConnection;
 
-class Staff extends Model
+class Staff extends Authenticatable
 {
-    use SoftDeletes;
-
-    protected $table = 'staff';
+    use HasApiTokens, HasFactory, Notifiable, SoftDeletes, UsesTenantConnection;
 
     protected $fillable = [
         'staff_id',
         'name',
         'email',
+        'password',
         'phone',
         'gender',
         'date_of_birth',
         'address',
-        'position',
-        'employment_type',
+        'type',
+        'nrc',
+        'profile_photo',
         'joined_date',
         'status',
         'qualifications',
-        'subjects',
+    ];
+
+    protected $hidden = [
+        'password',
+        'remember_token',
     ];
 
     protected $casts = [
         'date_of_birth' => 'date',
         'joined_date' => 'date',
         'qualifications' => 'json',
-        'subjects' => 'json',
+        'email_verified_at' => 'datetime',
+        'password' => 'hashed',
     ];
 
     // Relationships

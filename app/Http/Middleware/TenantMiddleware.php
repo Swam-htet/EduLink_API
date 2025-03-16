@@ -2,11 +2,10 @@
 
 namespace App\Http\Middleware;
 
-use App\Contracts\Services\Common\TenantServiceInterface;
+use App\Contracts\Services\TenantServiceInterface;
 use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
-
 class TenantMiddleware
 {
     protected $tenantService;
@@ -23,7 +22,7 @@ class TenantMiddleware
 
         if (!$tenantId) {
             return response()->json([
-                'message' => __('messages.error.tenant_not_found'),
+                'message' => 'Invalid tenant identifier',
                 'error' => 'X-Tenant header is required'
             ], Response::HTTP_BAD_REQUEST);
         }
@@ -33,7 +32,7 @@ class TenantMiddleware
 
         if (!$tenant) {
             return response()->json([
-                'message' => __('messages.error.tenant_not_found'),
+                'message' => 'Invalid tenant identifier',
                 'error' => 'Invalid tenant identifier'
             ], Response::HTTP_NOT_FOUND);
         }

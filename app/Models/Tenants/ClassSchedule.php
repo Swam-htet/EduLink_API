@@ -6,10 +6,10 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-
+use App\Models\Tenants\Traits\UsesTenantConnection;
 class ClassSchedule extends Model
 {
-    use SoftDeletes;
+    use SoftDeletes, UsesTenantConnection;
 
     protected $fillable = [
         'class_id',

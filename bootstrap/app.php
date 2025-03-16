@@ -1,19 +1,19 @@
 <?php
 
-use App\Exceptions\ApiException;
 use App\Http\Middleware\TenantMiddleware;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Auth\AuthenticationException;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
-use Illuminate\Validation\ValidationException;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
-use Symfony\Component\HttpKernel\Exception\HttpException;
+use Illuminate\Http\Request;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Database\QueryException;
+use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
+use Symfony\Component\HttpKernel\Exception\HttpException;
+use Illuminate\Validation\ValidationException;
+use Illuminate\Http\Response;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -23,64 +23,109 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware) {
-        // Register the TenantMiddleware
+        // Register TenantMiddleware as a global middleware to ensure it runs first
+        $middleware->append(TenantMiddleware::class);
+
+        // Configure auth middleware with 'api' guard for staff
+        // $middleware->api('auth:staff');
+
+        // Also apply tenant middleware to specific routes if needed
         $middleware->web(TenantMiddleware::class);
-        $middleware->api(TenantMiddleware::class);
     })
     ->withExceptions(function (Exceptions $exceptions) {
-        // // Handle 404 Not Found
-        // $exceptions->renderable(function (NotFoundHttpException $e) {
-        //     if (!request()->expectsJson() && !request()->is('api/*')) {
-        //         return redirect()->route('home');
-        //     }
-        //     return response()->json([
-        //         'error' => true,
-        //         'message' => trans('errors.404'),
-        //     ], Response::HTTP_NOT_FOUND);
-        // });
 
-        // // Handle 401 Unauthorized
-        // $exceptions->renderable(function (UnauthorizedHttpException $e) {
-        //     if (!request()->expectsJson() && !request()->is('api/*')) {
-        //         return redirect()->route('login');
-        //     }
-        //     return response()->json([
-        //         'error' => true,
-        //         'message' => trans('errors.401'),
-        //     ], Response::HTTP_UNAUTHORIZED);
-        // });
+        // Handle other API requests with JSON responses
+        $exceptions->renderable(function (Throwable $e, Request $request) {
+            // Check if request is an API request
+            if ($request->expectsJson() || $request->is('api/*')) {
 
-        // // Handle 403 Forbidden
-        // $exceptions->renderable(function (AccessDeniedHttpException $e) {
-        //     if (!request()->expectsJson() && !request()->is('api/*')) {
-        //         return redirect()->route('home');
-        //     }
-        //     return response()->json([
-        //         'error' => true,
-        //         'message' => trans('errors.403'),
-        //     ], Response::HTTP_FORBIDDEN);
-        // });
+                // AuthenticationException
+                if ($e instanceof AuthenticationException) {
+                    return response()->json([
+                        'message' => 'Unauthenticated.',
+                    ], Response::HTTP_UNAUTHORIZED);
+                }
 
-        // // Handle generic HTTP exceptions
-        // $exceptions->renderable(function (HttpException $e) {
-        //     if (!request()->expectsJson() && !request()->is('api/*')) {
-        //         return redirect()->route('home');
-        //     }
-        //     return response()->json([
-        //         'error' => true,
-        //         'message' => $e->getMessage() ?: trans('errors.500'),
-        //     ], $e->getStatusCode());
-        // });
+                // Validation exceptions
+                if ($e instanceof ValidationException) {
+                    return response()->json([
+                        'message' => 'The given data was invalid.',
+                        'errors' => $e->errors(),
+                    ], Response::HTTP_UNPROCESSABLE_ENTITY);
+                }
 
-        // // Handle 500 Internal Server Error
-        // $exceptions->renderable(function (\Exception $e) {
-        //     if (!request()->expectsJson() && !request()->is('api/*')) {
-        //         return redirect()->route('home');
-        //     }
-        //     return response()->json([
-        //         'error' => true,
-        //         'message' => trans('errors.500'),
-        //     ], Response::HTTP_INTERNAL_SERVER_ERROR);
-        // });
+                // Authorization exceptions
+                if ($e instanceof AuthorizationException) {
+                    return response()->json([
+                        'message' => 'This action is unauthorized.',
+                    ], Response::HTTP_FORBIDDEN);
+                }
+
+                // Model not found exceptions
+                if ($e instanceof ModelNotFoundException) {
+                    $modelName = strtolower(class_basename($e->getModel()));
+                    return response()->json([
+                        'message' => "Unable to find the requested {$modelName}.",
+                    ], Response::HTTP_NOT_FOUND);
+                }
+
+                // Route not found exceptions
+                if ($e instanceof NotFoundHttpException) {
+                    return response()->json([
+                        'message' => 'The requested resource was not found.',
+                    ], Response::HTTP_NOT_FOUND);
+                }
+
+                // Method not allowed exceptions
+                if ($e instanceof MethodNotAllowedHttpException) {
+                    return response()->json([
+                        'message' => 'The requested method is not allowed for this endpoint.',
+                    ], Response::HTTP_METHOD_NOT_ALLOWED);
+                }
+
+                // Database query exceptions
+                if ($e instanceof QueryException) {
+                    // Check for foreign key constraint failures
+                    if (str_contains($e->getMessage(), 'Foreign key constraint')) {
+                        return response()->json([
+                            'message' => 'Data integrity constraint violation.',
+                        ], Response::HTTP_CONFLICT);
+                    }
+
+                    // Check for unique constraint violations
+                    if (str_contains($e->getMessage(), 'Duplicate entry') || $e->getCode() === '23000') {
+                        return response()->json([
+                            'message' => 'The record already exists.',
+                        ], Response::HTTP_CONFLICT);
+                    }
+
+                    // Generic database error (don't expose details in production)
+                    return response()->json([
+                        'message' => 'Database error occurred.',
+                    ], Response::HTTP_INTERNAL_SERVER_ERROR);
+                }
+
+                // HTTP exceptions
+                if ($e instanceof HttpException) {
+                    return response()->json([
+                        'message' => $e->getMessage() ?: 'HTTP error occurred.',
+                    ], $e->getStatusCode());
+                }
+
+                return response()->json([
+                    'message' => $e->getMessage() ?: 'An unexpected error occurred.',
+                ], Response::HTTP_INTERNAL_SERVER_ERROR);
+            }
+            return null;
+        });
+
+        // Don't report certain exceptions to avoid log spam
+        $exceptions->dontReport([
+            // \Illuminate\Auth\AuthenticationException::class,
+            \Illuminate\Auth\Access\AuthorizationException::class,
+            \Symfony\Component\HttpKernel\Exception\HttpException::class,
+            \Illuminate\Database\Eloquent\ModelNotFoundException::class,
+            \Illuminate\Validation\ValidationException::class,
+        ]);
     })
     ->create();

@@ -3,7 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Models\Tenant;
-use App\Contracts\Services\Common\TenantServiceInterface;
+use App\Contracts\Services\TenantServiceInterface;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Artisan;
 

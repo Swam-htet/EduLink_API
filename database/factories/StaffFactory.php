@@ -2,8 +2,8 @@
 
 namespace Database\Factories;
 
+use App\Models\Tenants\Staff;
 use Illuminate\Database\Eloquent\Factories\Factory;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 
 /**
@@ -11,6 +11,8 @@ use Illuminate\Support\Str;
  */
 class StaffFactory extends Factory
 {
+    protected $model = Staff::class;
+
     /**
      * Define the model's default state.
      *
@@ -19,35 +21,44 @@ class StaffFactory extends Factory
     public function definition(): array
     {
         return [
-            // Auth & Basic Info
+            'name' => fake()->name(),
             'email' => fake()->unique()->safeEmail(),
-            'password' => Hash::make('password'),
+            'password' => bcrypt('Password$123'),
+            'phone' => fake()->phoneNumber(),
+            'gender' => fake()->randomElement(['male', 'female']),
+            'date_of_birth' => fake()->date(),
+            'address' => fake()->address(),
+            'type' => fake()->randomElement(['teacher', 'admin', 'staff']),
+            'nrc' => fake()->unique()->numberBetween(1000, 9999),
+            'profile_photo' => null,
+            'joined_date' => fake()->date(),
+            'status' => true,
             'email_verified_at' => now(),
             'remember_token' => Str::random(10),
-            'is_active' => true,
-            'staff_id' => fake()->unique()->numerify('STF####'),
-            'first_name' => fake()->firstName(),
-            'last_name' => fake()->lastName(),
-            'phone_number' => fake()->phoneNumber(),
-            'department' => fake()->randomElement(['Mathematics', 'Science', 'English', 'History', 'Computer Science']),
-            'designation' => fake()->randomElement(['Teacher', 'Senior Teacher', 'Head of Department', 'Coordinator']),
-            'date_of_birth' => fake()->dateTimeBetween('-60 years', '-25 years')->format('Y-m-d'),
-            'gender' => fake()->randomElement(['male', 'female', 'other']),
-            'address' => fake()->address(),
-            'emergency_contact_name' => fake()->name(),
-            'emergency_contact_phone' => fake()->phoneNumber(),
-            // Professional Info
-            'qualification' => fake()->randomElement(['B.Ed', 'M.Ed', 'PhD', 'MA', 'MSc']),
-            'specialization' => fake()->sentence(),
-            'joining_date' => fake()->dateTimeBetween('-10 years', 'now')->format('Y-m-d'),
-            'salary' => fake()->numberBetween(30000, 100000),
-            'bank_account_number' => fake()->bankAccountNumber(),
-            'bank_name' => fake()->company(),
-            'profile_photo' => null,
-            'bio' => fake()->paragraph(),
-            'certifications' => fake()->randomElements(['Teaching License', 'First Aid', 'Special Education', 'Digital Learning'], rand(1, 3)),
-            'teaching_subjects' => fake()->randomElements(['Mathematics', 'Physics', 'Chemistry', 'Biology', 'English', 'History'], rand(1, 3)),
-            'is_department_head' => fake()->boolean(20),
         ];
+    }
+
+    /**
+     * Indicate that the staff is inactive.
+     */
+    public function inactive(): Factory
+    {
+        return $this->state(function (array $attributes) {
+            return [
+                'status' => false,
+            ];
+        });
+    }
+
+    /**
+     * Indicate that the staff email is unverified.
+     */
+    public function unverified(): Factory
+    {
+        return $this->state(function (array $attributes) {
+            return [
+                'email_verified_at' => null,
+            ];
+        });
     }
 }

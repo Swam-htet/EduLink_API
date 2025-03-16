@@ -3,12 +3,11 @@
 namespace App\Contracts\Services;
 
 use Illuminate\Support\Collection;
+use App\Models\Tenants\TenantConfig;
 
 interface TenantConfigServiceInterface
 {
     public function getAllConfigs(): Collection;
-    public function getConfigByKey(string $key);
-    public function getConfigsByGroup(string $group);
-    public function createConfig(array $data);
-    public function deleteConfig(string $key);
+    public function createConfig(array $data): TenantConfig;
+    public function deleteConfig(string $key): bool;
 }

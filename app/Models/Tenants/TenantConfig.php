@@ -4,10 +4,11 @@ namespace App\Models\Tenants;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Models\Tenants\Traits\UsesTenantConnection;
 
 class TenantConfig extends Model
 {
-    use SoftDeletes;
+    use SoftDeletes, UsesTenantConnection;
 
     protected $fillable = [
         'key',
@@ -32,18 +33,5 @@ class TenantConfig extends Model
             'json' => json_decode($this->value, true),
             default => $this->value,
         };
-    }
-
-    // Add this method to use tenant connection
-    public function getConnectionName()
-    {
-        return 'tenant';
-    }
-
-    // Add these methods for dynamic connection switching
-    public function setConnection($name)
-    {
-        $this->connection = $name;
-        return $this;
     }
 }

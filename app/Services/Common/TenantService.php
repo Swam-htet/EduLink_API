@@ -5,7 +5,7 @@ namespace App\Services\Common;
 use App\Models\Tenant;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
-use App\Contracts\Services\Common\TenantServiceInterface;
+use App\Contracts\Services\TenantServiceInterface;
 
 
 class TenantService implements TenantServiceInterface

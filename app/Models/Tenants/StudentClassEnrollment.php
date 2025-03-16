@@ -5,10 +5,10 @@ namespace App\Models\Tenants;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-
+use App\Models\Tenants\Traits\UsesTenantConnection;
 class StudentClassEnrollment extends Model
 {
-    use SoftDeletes;
+    use SoftDeletes, UsesTenantConnection;
 
     protected $fillable = [
         'student_id',

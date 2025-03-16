@@ -53,28 +53,4 @@ class User extends Authenticatable
         ];
     }
 
-    public function student()
-    {
-        return $this->hasOne(Student::class);
-    }
-
-    public function staff()
-    {
-        return $this->hasOne(Staff::class);
-    }
-
-    public function isTeacher()
-    {
-        return $this->role === 'teacher';
-    }
-
-    public function isStudent()
-    {
-        return $this->role === 'student';
-    }
-
-    public function isAdmin()
-    {
-        return $this->role === 'admin';
-    }
 }
