@@ -35,6 +35,12 @@ use App\Contracts\Repositories\SubjectRepositoryInterface;
 use App\Repositories\SubjectRepository;
 use App\Contracts\Services\SubjectServiceInterface;
 use App\Services\Subject\SubjectService;
+use App\Contracts\Services\ClassManagementServiceInterface;
+use App\Services\Class\ClassManagementService;
+use App\Contracts\Repositories\ClassRepositoryInterface;
+use App\Repositories\ClassRepository;
+use App\Contracts\Services\ClassServiceInterface;
+use App\Services\Class\ClassService;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -82,6 +88,14 @@ class AppServiceProvider extends ServiceProvider
 
         // Subject public API bindings
         $this->app->singleton(SubjectServiceInterface::class, SubjectService::class);
+
+        // Class management bindings
+        $this->app->singleton(ClassManagementServiceInterface::class, ClassManagementService::class);
+
+        $this->app->singleton(ClassRepositoryInterface::class, ClassRepository::class);
+
+        // Class public API bindings
+        $this->app->singleton(ClassServiceInterface::class, ClassService::class);
     }
 
 

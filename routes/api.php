@@ -218,11 +218,11 @@ Route::middleware('auth:staff')->prefix('management')->group(function () {
     });
 
     // class api group
-    Route::prefix('class')->group(function () {
-        // Route::get('/', [App\Http\Controllers\ClassManagementController::class, 'index']);
-        // Route::get('/{id}', [App\Http\Controllers\ClassManagementController::class, 'show']);
-        // Route::post('/', [App\Http\Controllers\ClassManagementController::class, 'store']);
-        // Route::put('/{id}', [App\Http\Controllers\ClassManagementController::class, 'update']);
+    Route::prefix('classes')->group(function () {
+        Route::get('/', [App\Http\Controllers\ClassManagementController::class, 'index']);
+        Route::get('/{id}', [App\Http\Controllers\ClassManagementController::class, 'show']);
+        Route::post('/', [App\Http\Controllers\ClassManagementController::class, 'store']);
+        Route::put('/{id}', [App\Http\Controllers\ClassManagementController::class, 'update']);
     });
 
     // enroll student to class
@@ -270,8 +270,9 @@ Route::prefix('subjects')->group(function () {
 });
 
 // class api group
-Route::prefix('class')->group(function () {
-    // Route::get('/', [App\Http\Controllers\ClassController::class, 'index']);
+Route::prefix('classes')->group(function () {
+    Route::get('/', [App\Http\Controllers\ClassController::class, 'index']);
+    Route::get('/{id}', [App\Http\Controllers\ClassController::class, 'show']);
 });
 
 // class schedule api group

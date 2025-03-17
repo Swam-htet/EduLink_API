@@ -13,13 +13,14 @@ class Classes extends Model
 
     protected $fillable = [
         'name',
+        'code',
         'course_id',
-        'subject_id',
+        'teacher_id',
         'capacity',
         'start_date',
         'end_date',
         'status',
-        'notes',
+        'description',
     ];
 
     protected $casts = [
@@ -34,9 +35,9 @@ class Classes extends Model
         return $this->belongsTo(Course::class);
     }
 
-    public function subject(): BelongsTo
+    public function teacher(): BelongsTo
     {
-        return $this->belongsTo(Subject::class);
+        return $this->belongsTo(Staff::class);
     }
 
     public function schedules(): HasMany
