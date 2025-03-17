@@ -210,11 +210,11 @@ Route::middleware('auth:staff')->prefix('management')->group(function () {
     });
 
     // subject api group
-    Route::prefix('subject')->group(function () {
-        // Route::get('/', [App\Http\Controllers\SubjectManagementController::class, 'index']);
-        // Route::get('/{id}', [App\Http\Controllers\SubjectManagementController::class, 'show']);
-        // Route::post('/', [App\Http\Controllers\SubjectManagementController::class, 'store']);
-        // Route::put('/{id}', [App\Http\Controllers\SubjectManagementController::class, 'update']);
+    Route::prefix('subjects')->group(function () {
+        Route::get('/', [App\Http\Controllers\SubjectManagementController::class, 'index']);
+        Route::get('/{id}', [App\Http\Controllers\SubjectManagementController::class, 'show']);
+        Route::post('/', [App\Http\Controllers\SubjectManagementController::class, 'store']);
+        Route::put('/{id}', [App\Http\Controllers\SubjectManagementController::class, 'update']);
     });
 
     // class api group
@@ -262,10 +262,11 @@ Route::prefix('courses')->group(function () {
     Route::get('/', [App\Http\Controllers\CourseController::class, 'index']);
     Route::get('/{id}', [App\Http\Controllers\CourseController::class, 'show']);
 });
+
 // subject api group
-Route::prefix('subject')->group(function () {
-    // Route::get('/', [App\Http\Controllers\SubjectController::class, 'index']);
-    // Route::get('/{id}', [App\Http\Controllers\SubjectController::class, 'show']);
+Route::prefix('subjects')->group(function () {
+    Route::get('/', [App\Http\Controllers\SubjectController::class, 'index']);
+    Route::get('/{id}', [App\Http\Controllers\SubjectController::class, 'show']);
 });
 
 // class api group

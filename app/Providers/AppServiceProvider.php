@@ -29,6 +29,12 @@ use App\Contracts\Repositories\CourseRepositoryInterface;
 use App\Repositories\CourseRepository;
 use App\Contracts\Services\CourseServiceInterface;
 use App\Services\Course\CourseService;
+use App\Contracts\Services\SubjectManagementServiceInterface;
+use App\Services\Subject\SubjectManagementService;
+use App\Contracts\Repositories\SubjectRepositoryInterface;
+use App\Repositories\SubjectRepository;
+use App\Contracts\Services\SubjectServiceInterface;
+use App\Services\Subject\SubjectService;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -61,17 +67,21 @@ class AppServiceProvider extends ServiceProvider
         // student auth services
         $this->app->singleton(StudentAuthServiceInterface::class, StudentAuthService::class);
 
-        // student management services
         $this->app->singleton(StudentManagementServiceInterface::class,  StudentManagementService::class);
 
-        // course management services
         $this->app->bind(CourseManagementServiceInterface::class, CourseManagementService::class);
 
-        // course repository
         $this->app->bind(CourseRepositoryInterface::class, CourseRepository::class);
 
-        // New binding for public course service
         $this->app->bind(CourseServiceInterface::class, CourseService::class);
+
+        // Subject management bindings
+        $this->app->singleton(SubjectManagementServiceInterface::class, SubjectManagementService::class);
+
+        $this->app->singleton(SubjectRepositoryInterface::class, SubjectRepository::class);
+
+        // Subject public API bindings
+        $this->app->singleton(SubjectServiceInterface::class, SubjectService::class);
     }
 
 
