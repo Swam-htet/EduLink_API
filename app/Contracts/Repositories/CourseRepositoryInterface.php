@@ -15,6 +15,14 @@ interface CourseRepositoryInterface
      */
     public function getAll(): Collection;
 
+
+    /**
+     * Get all active courses
+     *
+     * @return Collection
+     */
+    public function getAllActiveCourses(): Collection;
+
     /**
      * Find course by ID
      *

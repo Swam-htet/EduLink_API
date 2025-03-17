@@ -257,6 +257,11 @@ Route::middleware('auth:staff')->prefix('management')->group(function () {
     });
 });
 
+// course api group
+Route::prefix('courses')->group(function () {
+    Route::get('/', [App\Http\Controllers\CourseController::class, 'index']);
+    Route::get('/{id}', [App\Http\Controllers\CourseController::class, 'show']);
+});
 // subject api group
 Route::prefix('subject')->group(function () {
     // Route::get('/', [App\Http\Controllers\SubjectController::class, 'index']);

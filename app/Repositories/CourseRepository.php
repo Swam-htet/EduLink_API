@@ -20,6 +20,11 @@ class CourseRepository implements CourseRepositoryInterface
         return $this->model->all();
     }
 
+    public function getAllActiveCourses(): Collection
+    {
+        return $this->model->where('status', 'active')->get();
+    }
+
     public function findById(int $id): ?Course
     {
         return $this->model->find($id);

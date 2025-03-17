@@ -27,6 +27,8 @@ use App\Contracts\Services\CourseManagementServiceInterface;
 use App\Services\Course\CourseManagementService;
 use App\Contracts\Repositories\CourseRepositoryInterface;
 use App\Repositories\CourseRepository;
+use App\Contracts\Services\CourseServiceInterface;
+use App\Services\Course\CourseService;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -67,6 +69,9 @@ class AppServiceProvider extends ServiceProvider
 
         // course repository
         $this->app->bind(CourseRepositoryInterface::class, CourseRepository::class);
+
+        // New binding for public course service
+        $this->app->bind(CourseServiceInterface::class, CourseService::class);
     }
 
 
