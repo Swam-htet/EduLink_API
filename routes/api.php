@@ -5,7 +5,6 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Resources\TenantResource;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Mail;
-use App\Mail\WelcomeMail;
 use App\Mail\Student\RegistrationPendingMail;
 use App\Mail\Student\ForgotPasswordOtpMail;
 use App\Mail\Student\PasswordChangeOtpMail;
@@ -202,12 +201,12 @@ Route::middleware('auth:staff')->prefix('management')->group(function () {
     });
 
     // course api group
-    Route::prefix('course')->group(function () {
-        // Route::get('/', [App\Http\Controllers\CourseManagementController::class, 'index']);
-        // Route::get('/{id}', [App\Http\Controllers\CourseManagementController::class, 'show']);
-        // Route::post('/', [App\Http\Controllers\CourseManagementController::class, 'store']);
-        // Route::put('/{id}', [App\Http\Controllers\CourseManagementController::class, 'update']);
-        // Route::delete('/{id}', [App\Http\Controllers\CourseManagementController::class, 'destroy']);
+    Route::prefix('courses')->group(function () {
+        Route::get('/', [App\Http\Controllers\CourseManagementController::class, 'index']);
+        Route::get('/{id}', [App\Http\Controllers\CourseManagementController::class, 'show']);
+        Route::post('/', [App\Http\Controllers\CourseManagementController::class, 'store']);
+        Route::put('/{id}', [App\Http\Controllers\CourseManagementController::class, 'update']);
+        Route::delete('/{id}', [App\Http\Controllers\CourseManagementController::class, 'destroy']);
     });
 
     // subject api group

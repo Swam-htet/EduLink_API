@@ -23,6 +23,10 @@ use App\Contracts\Services\StudentAuthServiceInterface;
 use App\Services\Student\StudentAuthService;
 use App\Contracts\Services\StudentManagementServiceInterface;
 use App\Services\Student\StudentManagementService;
+use App\Contracts\Services\CourseManagementServiceInterface;
+use App\Services\Course\CourseManagementService;
+use App\Contracts\Repositories\CourseRepositoryInterface;
+use App\Repositories\CourseRepository;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -57,6 +61,12 @@ class AppServiceProvider extends ServiceProvider
 
         // student management services
         $this->app->singleton(StudentManagementServiceInterface::class,  StudentManagementService::class);
+
+        // course management services
+        $this->app->bind(CourseManagementServiceInterface::class, CourseManagementService::class);
+
+        // course repository
+        $this->app->bind(CourseRepositoryInterface::class, CourseRepository::class);
     }
 
 
