@@ -15,6 +15,14 @@ use App\Contracts\Repositories\TenantConfigRepositoryInterface;
 use App\Repositories\TenantConfigRepository;
 use App\Contracts\Services\StaffAuthServiceInterface;
 use App\Services\StaffAuthService;
+use App\Contracts\Services\StudentRegistrationServiceInterface;
+use App\Services\Student\StudentRegistrationService;
+use App\Contracts\Repositories\StudentRepositoryInterface;
+use App\Repositories\StudentRepository;
+use App\Contracts\Services\StudentAuthServiceInterface;
+use App\Services\Student\StudentAuthService;
+use App\Contracts\Services\StudentManagementServiceInterface;
+use App\Services\Student\StudentManagementService;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -37,6 +45,18 @@ class AppServiceProvider extends ServiceProvider
 
         // staff auth services
         $this->app->singleton(StaffAuthServiceInterface::class, StaffAuthService::class);
+
+        // student registration services
+        $this->app->singleton(StudentRegistrationServiceInterface::class, StudentRegistrationService::class);
+
+        // student repository
+        $this->app->singleton(StudentRepositoryInterface::class, StudentRepository::class);
+
+        // student auth services
+        $this->app->singleton(StudentAuthServiceInterface::class, StudentAuthService::class);
+
+        // student management services
+        $this->app->singleton(StudentManagementServiceInterface::class,  StudentManagementService::class);
     }
 
 

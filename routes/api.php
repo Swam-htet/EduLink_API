@@ -136,9 +136,11 @@ Route::group(['prefix' => 'test'], function () {
 Route::prefix('auth')->group(function () {
     Route::group(['prefix' => 'student'], function () {
         Route::post('/login', [App\Http\Controllers\Auth\StudentAuthController::class, 'login']);
-        Route::post('/logout', [App\Http\Controllers\Auth\StudentAuthController::class, 'logout']);
-        Route::get('/profile', [App\Http\Controllers\Auth\StudentAuthController::class, 'getProfile']);
+        Route::group(['middleware' => 'auth:student'], function () {
+            Route::post('/logout', [App\Http\Controllers\Auth\StudentAuthController::class, 'logout']);
 
+            Route::get('/profile', [App\Http\Controllers\Auth\StudentAuthController::class, 'getProfile']);
+        });
         // // forget password
         // Route::post('/forget-password', [App\Http\Controllers\Auth\StudentAuthController::class, 'forgetPassword']);
 
@@ -154,14 +156,15 @@ Route::prefix('auth')->group(function () {
 
         Route::group(['middleware' => 'auth:staff'], function () {
             Route::post('/logout', [App\Http\Controllers\Auth\StaffAuthController::class, 'logout']);
+
             Route::get('/profile', [App\Http\Controllers\Auth\StaffAuthController::class, 'getProfile']);
         });
     });
 });
 
 
-Route::prefix('student')->group(function () {
-    // Route::post('/register', [App\Http\Controllers\Auth\StudentController::class, 'register']);
+Route::prefix('students')->group(function () {
+    Route::post('/register', [App\Http\Controllers\StudentController::class, 'register']);
 
     // update student profile
     // Route::put('/update-profile', [App\Http\Controllers\Auth\StudentController::class, 'updateProfile']);
@@ -174,9 +177,9 @@ Route::prefix('staff')->group(function () {
 // management api group with staff guard middleware
 Route::middleware('auth:staff')->prefix('management')->group(function () {
     Route::prefix('student')->group(function () {
-        // Route::post('/approve-registration', [App\Http\Controllers\StudentRegistrationManagementController::class, 'approveRegistration']);
+        Route::post('/approve-registration', [App\Http\Controllers\StudentManagementController::class, 'approveRegistration']);
 
-        // Route::post('/reject-registration', [App\Http\Controllers\StudentRegistrationManagementController::class, 'rejectRegistration']);
+        Route::post('/reject-registration', [App\Http\Controllers\StudentManagementController::class, 'rejectRegistration']);
     });
 
 

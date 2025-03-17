@@ -54,9 +54,7 @@ class StaffManagementService implements StaffManagementServiceInterface
     {
         // Generate random password
         // todo : need to generate random password with uppercase, lowercase, numbers and special characters
-        $data['password'] = Hash::make("Password$123S");
-        // join date today
-        $data['joined_date'] = now();
+        $data['password'] = "Password$123S";
 
         try {
             DB::beginTransaction();

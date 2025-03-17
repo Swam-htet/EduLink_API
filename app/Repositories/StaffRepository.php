@@ -6,7 +6,7 @@ use App\Contracts\Repositories\StaffRepositoryInterface;
 use App\Models\Tenants\Staff;
 use Exception;
 use Illuminate\Support\Facades\Log;
-
+use Illuminate\Support\Facades\Hash;
 class StaffRepository implements StaffRepositoryInterface
 {
     protected $model;
@@ -47,6 +47,12 @@ class StaffRepository implements StaffRepositoryInterface
     public function create(array $data): Staff
 {
     try {
+        // hash password
+        $data['password'] = Hash::make($data['password']);
+
+        // join date today
+        $data['joined_date'] = now();
+
         // Create staff
         $staff = $this->model->create($data);
         return $staff;

@@ -30,6 +30,8 @@ class Student extends Authenticatable
         'guardian_phone',
         'guardian_relationship',
         'additional_info',
+        'nrc',
+        'profile_photo',
     ];
 
     protected $hidden = [
@@ -44,12 +46,6 @@ class Student extends Authenticatable
         'enrollment_date' => 'date',
         'additional_info' => 'json',
     ];
-
-    // Relationships
-    public function course(): BelongsTo
-    {
-        return $this->belongsTo(Course::class);
-    }
 
     public function classEnrollments(): HasMany
     {

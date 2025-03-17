@@ -41,10 +41,10 @@ class StaffAuthService implements StaffAuthServiceInterface
      * Logout staff
      *
      * @param Staff $staff
-     * @return void
+     * @return bool
      */
-    public function logout(Staff $staff): void
+    public function logout(Staff $staff): bool
     {
-        $staff->token()->revoke();
+        return (bool) $staff->token()->revoke();
     }
 }
