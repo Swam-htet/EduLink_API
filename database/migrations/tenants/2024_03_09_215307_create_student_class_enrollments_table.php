@@ -12,9 +12,8 @@ return new class extends Migration
             $table->id();
             $table->foreignId('student_id')->constrained()->onDelete('cascade');
             $table->foreignId('class_id')->constrained()->onDelete('cascade');
-            $table->date('enrollment_date');
-            $table->enum('status', ['enrolled', 'completed', 'dropped', 'failed'])->default('enrolled');
-            $table->decimal('grade', 5, 2)->nullable();
+            $table->date('enrolled_at');
+            $table->enum('status', ['enrolled', 'completed', 'failed'])->default('enrolled');
             $table->text('remarks')->nullable();
             $table->timestamps();
             $table->softDeletes();

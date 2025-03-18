@@ -41,6 +41,10 @@ use App\Contracts\Repositories\ClassRepositoryInterface;
 use App\Repositories\ClassRepository;
 use App\Contracts\Services\ClassServiceInterface;
 use App\Services\Class\ClassService;
+use App\Contracts\Services\ClassEnrollmentManagementServiceInterface;
+use App\Services\Class\ClassEnrollmentManagementService;
+use App\Contracts\Repositories\StudentClassEnrollmentRepositoryInterface;
+use App\Repositories\StudentClassEnrollmentRepository;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -96,6 +100,11 @@ class AppServiceProvider extends ServiceProvider
 
         // Class public API bindings
         $this->app->singleton(ClassServiceInterface::class, ClassService::class);
+
+        // Class enrollment bindings
+        $this->app->singleton(ClassEnrollmentManagementServiceInterface::class, ClassEnrollmentManagementService::class);
+
+        $this->app->singleton(StudentClassEnrollmentRepositoryInterface::class, StudentClassEnrollmentRepository::class);
     }
 
 

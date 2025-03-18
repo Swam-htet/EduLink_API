@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use App\Models\Tenants\Traits\UsesTenantConnection;
+
 class StudentClassEnrollment extends Model
 {
     use SoftDeletes, UsesTenantConnection;
@@ -13,15 +14,13 @@ class StudentClassEnrollment extends Model
     protected $fillable = [
         'student_id',
         'class_id',
-        'enrollment_date',
+        'enrolled_at',
         'status',
-        'grade',
         'remarks',
     ];
 
     protected $casts = [
-        'enrollment_date' => 'date',
-        'grade' => 'decimal:2',
+        'enrolled_at' => 'date',
     ];
 
     // Relationships

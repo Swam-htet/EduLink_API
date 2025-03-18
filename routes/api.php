@@ -226,11 +226,8 @@ Route::middleware('auth:staff')->prefix('management')->group(function () {
     });
 
     // enroll student to class
-    Route::prefix('enroll')->group(function () {
-        // Route::post('/', [App\Http\Controllers\EnrollmentController::class, 'enrollStudent']);
-
-        // get all enrollments by class id
-        // Route::get('/class/{id}', [App\Http\Controllers\EnrollmentController::class, 'getEnrollmentsByClassId']);
+    Route::prefix('class-enrollment')->group(function () {
+        Route::post('/', [App\Http\Controllers\ClassEnrollmentManagementController::class, 'enrollStudent']);
     });
 
     // class schedule api group

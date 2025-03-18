@@ -36,6 +36,7 @@ return Application::configure(basePath: dirname(__DIR__))
 
         // Handle other API requests with JSON responses
         $exceptions->renderable(function (Throwable $e, Request $request) {
+
             // Check if request is an API request
             if ($request->expectsJson() || $request->is('api/*')) {
 
