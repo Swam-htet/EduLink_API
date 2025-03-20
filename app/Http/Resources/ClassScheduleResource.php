@@ -21,6 +21,11 @@ class ClassScheduleResource extends JsonResource
                 'name' => $this->class->name,
                 'code' => $this->class->code,
             ],
+            'subject' => [
+                'id' => $this->subject->id,
+                'title' => $this->subject->title,
+                'code' => $this->subject->code,
+            ],
             'tutor' => [
                 'id' => $this->staff->id,
                 'first_name' => $this->staff->first_name,

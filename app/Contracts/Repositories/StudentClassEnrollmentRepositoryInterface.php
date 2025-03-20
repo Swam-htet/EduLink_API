@@ -99,4 +99,13 @@ interface StudentClassEnrollmentRepositoryInterface
      * @return StudentClassEnrollment
      */
     public function updateStatus(StudentClassEnrollment $enrollment, string $status): StudentClassEnrollment;
+
+    /**
+     * Find enrollment by student ID and class ID
+     *
+     * @param int $studentId
+     * @param int $classId
+     * @return StudentClassEnrollment|null
+     */
+    public function getCompletedEnrollmentByStudentIdAndClassId(int $studentId, int $classId): ?StudentClassEnrollment;
 }

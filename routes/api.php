@@ -169,12 +169,12 @@ Route::prefix('management')->group(function () {
     });
 
     // attendance api group
-    Route::prefix('attendance')->group(function () {
+    Route::prefix('attendances')->group(function () {
         // manual attendance making by staff
-        // Route::post('/', [App\Http\Controllers\AttendanceController::class, 'makeAttendance']);
+        Route::post('/', [App\Http\Controllers\AttendanceManagementController::class, 'makeManualAttendance']);
 
         // get all attendances by student id
-        // Route::get('/student/{id}', [App\Http\Controllers\AttendanceController::class, 'getAttendancesByStudentId']);
+        Route::get('/', [App\Http\Controllers\AttendanceManagementController::class, 'getAttendances']);
     });
 });
 
@@ -213,10 +213,10 @@ Route::prefix('class-schedules')->group(function () {
 });
 
 // attendance api group
-Route::prefix('attendance')->group(function () {
+Route::prefix('attendances')->group(function () {
     // make attendance
-    // Route::post('/', [App\Http\Controllers\AttendanceController::class, 'makeAttendance']);
+    Route::post('/students/{student_id}', [App\Http\Controllers\AttendanceController::class, 'makeAttendance']);
 
     // get all attendances by student id
-    // Route::get('/student/{id}', [App\Http\Controllers\AttendanceController::class, 'getAttendancesByStudentId']);
+    Route::get('/students/{student_id}', [App\Http\Controllers\AttendanceController::class, 'getAttendancesByStudentId']);
 });

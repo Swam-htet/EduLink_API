@@ -12,9 +12,8 @@ return new class extends Migration
             $table->id();
             $table->foreignId('class_schedule_id')->constrained()->onDelete('cascade');
             $table->foreignId('student_id')->constrained()->onDelete('cascade');
-            $table->enum('status', ['present', 'absent', 'late', 'excused'])->default('absent');
+            $table->enum('status', ['present', 'absent', 'late',])->default('absent');
             $table->time('time_in')->nullable();
-            $table->time('time_out')->nullable();
             $table->text('remarks')->nullable();
             $table->timestamps();
             $table->softDeletes();

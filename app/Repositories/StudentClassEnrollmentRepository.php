@@ -159,4 +159,19 @@ class StudentClassEnrollmentRepository implements StudentClassEnrollmentReposito
 
         return $enrollment->fresh();
     }
+
+    /**
+     * Find enrollment by student ID and class ID
+     *
+     * @param int $studentId
+     * @param int $classId
+     * @return StudentClassEnrollment|null
+     */
+    public function getCompletedEnrollmentByStudentIdAndClassId(int $studentId, int $classId): ?StudentClassEnrollment
+    {
+        return $this->model->where('student_id', $studentId)
+            ->where('class_id', $classId)
+            ->where('status', 'completed')
+            ->first();
+    }
 }

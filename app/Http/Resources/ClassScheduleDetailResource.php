@@ -16,7 +16,12 @@ class ClassScheduleDetailResource extends JsonResource
                 'name' => $this->class->name,
                 'code' => $this->class->code,
             ],
-            'staff' => [
+            'subject' => [
+                'id' => $this->subject->id,
+                'title' => $this->subject->title,
+                'code' => $this->subject->code,
+            ],
+            'tutor' => [
                 'id' => $this->staff->id,
                 'first_name' => $this->staff->first_name,
                 'last_name' => $this->staff->last_name,

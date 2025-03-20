@@ -53,6 +53,12 @@ use App\Contracts\Services\ClassEnrollmentServiceInterface;
 use App\Services\ClassEnrollmentService;
 use App\Contracts\Services\ClassScheduleServiceInterface;
 use App\Services\ClassScheduleService;
+use App\Contracts\Services\AttendanceServiceInterface;
+use App\Services\AttendanceService;
+use App\Contracts\Repositories\AttendanceRepositoryInterface;
+use App\Repositories\AttendanceRepository;
+use App\Contracts\Services\AttendanceManagementServiceInterface;
+use App\Services\AttendanceManagementService;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -122,6 +128,11 @@ class AppServiceProvider extends ServiceProvider
 
         $this->app->bind(ClassScheduleServiceInterface::class, ClassScheduleService::class);
 
+        $this->app->bind(AttendanceServiceInterface::class, AttendanceService::class);
+
+        $this->app->bind(AttendanceRepositoryInterface::class, AttendanceRepository::class);
+
+        $this->app->bind(AttendanceManagementServiceInterface::class, AttendanceManagementService::class);
 
     }
 
