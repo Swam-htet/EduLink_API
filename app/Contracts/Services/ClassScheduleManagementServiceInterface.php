@@ -23,10 +23,10 @@ interface ClassScheduleManagementServiceInterface
     public function getScheduleById(int $id): ClassSchedule;
 
     /**
-     * Create new schedule
+     * Create multiple schedules
      *
      * @param array $data
-     * @return ClassSchedule
+     * @return Collection
      */
-    public function createSchedule(array $data): ClassSchedule;
+    public function createMultipleSchedules(array $data): Collection;
 }

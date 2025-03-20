@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests\Class;
+namespace App\Http\Requests\ClassSchedule;
 
 use Illuminate\Foundation\Http\FormRequest;
 

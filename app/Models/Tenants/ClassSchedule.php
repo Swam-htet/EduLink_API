@@ -14,6 +14,7 @@ class ClassSchedule extends Model
     protected $fillable = [
         'class_id',
         'staff_id',
+        'subject_id',
         'date',
         'start_time',
         'end_time',
@@ -26,6 +27,7 @@ class ClassSchedule extends Model
         'start_time' => 'datetime',
         'end_time' => 'datetime',
         'late_mins' => 'integer',
+        'date' => 'date',
     ];
 
     // Relationships
@@ -42,5 +44,10 @@ class ClassSchedule extends Model
     public function attendances(): HasMany
     {
         return $this->hasMany(Attendance::class);
+    }
+
+    public function subject(): BelongsTo
+    {
+        return $this->belongsTo(Subject::class);
     }
 }

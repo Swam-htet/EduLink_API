@@ -17,24 +17,37 @@ class ClassScheduleRepository implements ClassScheduleRepositoryInterface
 
     public function getAll(): Collection
     {
-        return $this->model->with(['class', 'class.teacher', 'staff'])->get();
+        return $this->model->with(['class', 'class.teacher', 'staff', 'subject'])->get();
     }
 
     public function findById(int $id): ?ClassSchedule
     {
-        return $this->model->with(['class', 'class.teacher', 'staff'])->find($id);
+        return $this->model->with(['class', 'class.teacher', 'staff', 'subject'])->find($id);
     }
 
     public function create(array $data): ClassSchedule
     {
         $schedule = $this->model->create($data);
-        return $schedule->load(['class', 'class.teacher', 'staff']);
+        return $schedule->load(['class', 'class.teacher', 'staff', 'subject']);
     }
 
     public function getSchedulesByClassId(int $classId): Collection
     {
-        return $this->model->with(['class', 'class.teacher', 'staff'])
+        return $this->model->with(['class', 'class.teacher', 'staff', 'subject'])
             ->where('class_id', $classId)
             ->get();
     }
+
+    public function findConflictSchedule(int $classId, string $date, string $startTime, string $endTime): ?ClassSchedule
+    {
+        $conflictSchedule = $this->model->with(['class'])
+            ->where('class_id', $classId)
+            ->where('date', $date)
+            ->where('start_time', '<=', $startTime)
+            ->where('end_time', '>=', $endTime)
+            ->first();
+
+        return $conflictSchedule;
+    }
+
 }

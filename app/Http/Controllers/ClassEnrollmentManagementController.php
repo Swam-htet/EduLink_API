@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\Class\EnrollStudentRequest;
+use App\Http\Requests\Enrollment\EnrollStudentRequest;
 use App\Contracts\Services\ClassEnrollmentManagementServiceInterface;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;

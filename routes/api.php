@@ -206,11 +206,10 @@ Route::prefix('class-enrollments')->group(function () {
 });
 
 // class schedule api group
-Route::prefix('class-schedule')->group(function () {
-    // get all class schedules
-    // Route::get('/', [App\Http\Controllers\ClassScheduleController::class, 'index']);
-    // get a class schedule
-    // Route::get('/{id}', [App\Http\Controllers\ClassScheduleController::class, 'show']);
+Route::prefix('class-schedules')->group(function () {
+    Route::get('/classes/{class_id?}', [App\Http\Controllers\ClassScheduleController::class, 'index']);
+
+    Route::get('/{id}', [App\Http\Controllers\ClassScheduleController::class, 'show']);
 });
 
 // attendance api group

@@ -51,6 +51,8 @@ use App\Contracts\Repositories\ClassScheduleRepositoryInterface;
 use App\Repositories\ClassScheduleRepository;
 use App\Contracts\Services\ClassEnrollmentServiceInterface;
 use App\Services\ClassEnrollmentService;
+use App\Contracts\Services\ClassScheduleServiceInterface;
+use App\Services\ClassScheduleService;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -117,6 +119,10 @@ class AppServiceProvider extends ServiceProvider
         $this->app->singleton(ClassScheduleRepositoryInterface::class, ClassScheduleRepository::class);
 
         $this->app->bind(ClassEnrollmentServiceInterface::class, ClassEnrollmentService::class);
+
+        $this->app->bind(ClassScheduleServiceInterface::class, ClassScheduleService::class);
+
+
     }
 
 

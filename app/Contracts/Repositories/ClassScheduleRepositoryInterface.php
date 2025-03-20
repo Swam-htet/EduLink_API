@@ -37,4 +37,15 @@ interface ClassScheduleRepositoryInterface
      * @return Collection
      */
     public function getSchedulesByClassId(int $classId): Collection;
+
+    /**
+     * Find conflict schedule
+     *
+     * @param int $classId
+     * @param string $date
+     * @param string $startTime
+     * @param string $endTime
+     * @return ClassSchedule|null
+     */
+    public function findConflictSchedule(int $classId, string $date, string $startTime, string $endTime): ?ClassSchedule;
 }

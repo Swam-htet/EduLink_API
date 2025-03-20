@@ -6,9 +6,9 @@ use App\Contracts\Services\ClassScheduleManagementServiceInterface;
 use App\Contracts\Repositories\ClassScheduleRepositoryInterface;
 use App\Contracts\Repositories\ClassRepositoryInterface;
 use App\Models\Tenants\ClassSchedule;
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
+use Illuminate\Database\Eloquent\Collection;
 
 class ClassScheduleManagementService implements ClassScheduleManagementServiceInterface
 {
@@ -41,22 +41,28 @@ class ClassScheduleManagementService implements ClassScheduleManagementServiceIn
         return $schedule;
     }
 
-    public function createSchedule(array $data): ClassSchedule
+    public function createSchedule(array $schedule): ClassSchedule
     {
         DB::beginTransaction();
         try {
             // Check if class exists and is ongoing
-            $class = $this->classRepository->findById($data['class_id']);
+            $class = $this->classRepository->findById($schedule['class_id']);
             if (!$class || $class->status !== 'ongoing') {
                 throw ValidationException::withMessages([
                     'class_id' => ['Class not found or not ongoing.']
                 ]);
             }
 
-            // todo : Check for schedule conflicts with date, start_time, end_time
+            // finding conflict schedule for same class and same date
+            $conflictSchedule = $this->scheduleRepository->findConflictSchedule($schedule['class_id'], $schedule['date'], $schedule['start_time'], $schedule['end_time']);
 
+            if ($conflictSchedule) {
+                throw ValidationException::withMessages([
+                    'date' => ['Schedule already exists for this class and date.']
+                ]);
+            }
 
-            $schedule = $this->scheduleRepository->create($data);
+            $schedule = $this->scheduleRepository->create($schedule);
 
             DB::commit();
             return $schedule;
@@ -64,5 +70,14 @@ class ClassScheduleManagementService implements ClassScheduleManagementServiceIn
             DB::rollBack();
             throw $e;
         }
+    }
+
+    public function createMultipleSchedules(array $schedules): Collection
+    {
+         $createdSchedules = new Collection();
+        foreach ($schedules as $schedule) {
+            $createdSchedules->push($this->createSchedule($schedule));
+        }
+        return $createdSchedules;
     }
 }
