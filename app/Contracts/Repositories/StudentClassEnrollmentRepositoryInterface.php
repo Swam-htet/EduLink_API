@@ -73,4 +73,30 @@ interface StudentClassEnrollmentRepositoryInterface
      * @return Collection
      */
     public function getCompletedEnrollmentsByStudentId(int $studentId): Collection;
+
+    /**
+     * Get completed enrollments by class ID
+     *
+     * @param int $classId
+     * @return Collection
+     */
+    public function getCompletedEnrollmentsByClassId(int $classId): Collection;
+
+    /**
+     * Get paginated enrollments by student ID with filters
+     *
+     * @param int $studentId
+     * @param array $filters
+     * @return LengthAwarePaginator
+     */
+    public function getPaginatedEnrollmentsByStudentId(int $studentId, array $filters): LengthAwarePaginator;
+
+    /**
+     * Update enrollment status
+     *
+     * @param StudentClassEnrollment $enrollment
+     * @param string $status
+     * @return StudentClassEnrollment
+     */
+    public function updateStatus(StudentClassEnrollment $enrollment, string $status): StudentClassEnrollment;
 }

@@ -6,10 +6,13 @@ use Illuminate\Support\Facades\Route;
 // auth api group
 Route::prefix('auth')->group(function () {
     Route::group(['prefix' => 'student'], function () {
+        // login for student
         Route::post('/login', [App\Http\Controllers\Auth\StudentAuthController::class, 'login']);
         Route::group(['middleware' => 'auth:student'], function () {
+            // logout for student
             Route::post('/logout', [App\Http\Controllers\Auth\StudentAuthController::class, 'logout']);
 
+            // get student profile
             Route::get('/profile', [App\Http\Controllers\Auth\StudentAuthController::class, 'getProfile']);
         });
         // // forget password
@@ -23,11 +26,14 @@ Route::prefix('auth')->group(function () {
     });
 
     Route::group(['prefix' => 'staff'], function () {
+        // login for staff
         Route::post('/login', [App\Http\Controllers\Auth\StaffAuthController::class, 'login']);
 
         Route::group(['middleware' => 'auth:staff'], function () {
+            // logout for staff
             Route::post('/logout', [App\Http\Controllers\Auth\StaffAuthController::class, 'logout']);
 
+            // get staff profile
             Route::get('/profile', [App\Http\Controllers\Auth\StaffAuthController::class, 'getProfile']);
         });
     });
@@ -35,6 +41,7 @@ Route::prefix('auth')->group(function () {
 
 
 Route::prefix('students')->group(function () {
+    // register for student
     Route::post('/register', [App\Http\Controllers\StudentController::class, 'register']);
 
     // update student profile
@@ -53,11 +60,13 @@ Route::prefix('staff')->group(function () {
 // todo : need to add middleware for this management route group
 Route::prefix('management')->group(function () {
     Route::prefix('students')->group(function () {
-
+        // get all students for management
         Route::get('/', [App\Http\Controllers\StudentManagementController::class, 'index']);
 
+        // approve student registration for management
         Route::post('/approve-registration', [App\Http\Controllers\StudentManagementController::class, 'approveRegistration']);
 
+        // reject student registration for management
         Route::post('/reject-registration', [App\Http\Controllers\StudentManagementController::class, 'rejectRegistration']);
     });
 
@@ -65,13 +74,13 @@ Route::prefix('management')->group(function () {
     // staff api group
     Route::prefix('staff')->group(function () {
 
-        // check all staffs
+        // get all staffs for management
         Route::get('/', [App\Http\Controllers\StaffManagementController::class, 'index']);
 
-        // check a staff
+        // get a staff for management
         Route::get('/{id}', [App\Http\Controllers\StaffManagementController::class, 'show']);
 
-        // create a staff
+        // create a staff by management
         Route::post('/', [App\Http\Controllers\StaffManagementController::class, 'create']);
 
         // // update staff
@@ -83,55 +92,80 @@ Route::prefix('management')->group(function () {
 
     // course api group
     Route::prefix('courses')->group(function () {
+        // get all courses for management
         Route::get('/', [App\Http\Controllers\CourseManagementController::class, 'index']);
+
+        // get a course for management
         Route::get('/{id}', [App\Http\Controllers\CourseManagementController::class, 'show']);
+
+        // create a course by management
         Route::post('/', [App\Http\Controllers\CourseManagementController::class, 'store']);
+
+        // update a course by management
         Route::put('/{id}', [App\Http\Controllers\CourseManagementController::class, 'update']);
+
+        // delete a course by management
         Route::delete('/{id}', [App\Http\Controllers\CourseManagementController::class, 'destroy']);
     });
 
     // subject api group
     Route::prefix('subjects')->group(function () {
+        // get all subjects for management
         Route::get('/', [App\Http\Controllers\SubjectManagementController::class, 'index']);
+
+        // get a subject for management
         Route::get('/{id}', [App\Http\Controllers\SubjectManagementController::class, 'show']);
+
+        // create a subject by management
         Route::post('/', [App\Http\Controllers\SubjectManagementController::class, 'store']);
+
+        // update a subject by management
         Route::put('/{id}', [App\Http\Controllers\SubjectManagementController::class, 'update']);
     });
 
     // class api group
-    Route::prefix('classes')->group(function () {
+        Route::prefix('classes')->group(function () {
+        // get all classes for management
         Route::get('/', [App\Http\Controllers\ClassManagementController::class, 'index']);
+
+        // get a class for management
         Route::get('/{id}', [App\Http\Controllers\ClassManagementController::class, 'show']);
+
+        // create a class by management
         Route::post('/', [App\Http\Controllers\ClassManagementController::class, 'store']);
+
+        // update a class by management
         Route::put('/{id}', [App\Http\Controllers\ClassManagementController::class, 'update']);
     });
 
     // enroll student to class
     Route::prefix('class-enrollments')->group(function () {
+        // get all class enrollments for management
         Route::get('/', [App\Http\Controllers\ClassEnrollmentManagementController::class, 'index']);
 
+        // update a class enrollment by management
         Route::put('/{id}', [App\Http\Controllers\ClassEnrollmentManagementController::class, 'update']);
 
+        // enroll student to class
         Route::post('/', [App\Http\Controllers\ClassEnrollmentManagementController::class, 'enrollStudent']);
 
-        // sent manual class enrollment email
+        // send manual enrollment email
         Route::post('/send-email', [App\Http\Controllers\ClassEnrollmentManagementController::class, 'sendManualEnrollmentEmail']);
-
-        Route::post('/confirm/{token?}', [App\Http\Controllers\ClassEnrollmentController::class, 'confirmEnrollment']);
     });
 
     // class schedule api group
     Route::prefix('class-schedules')->group(function () {
+        // get all class schedules for management
         Route::get('/', [App\Http\Controllers\ClassScheduleManagementController::class, 'index']);
-        Route::get('/{id}', [App\Http\Controllers\ClassScheduleManagementController::class, 'show']);
-        Route::post('/', [App\Http\Controllers\ClassScheduleManagementController::class, 'store']);
-    });
 
-    // config api group
-    Route::prefix('config')->group(function () {
-        Route::get('/', [App\Http\Controllers\TenantConfigController::class, 'index']);
-        Route::post('/', [App\Http\Controllers\TenantConfigController::class, 'store']);
-        Route::delete('/{key}', [App\Http\Controllers\TenantConfigController::class, 'destroy']);
+        // get a class schedule for management
+        Route::get('/{id}', [App\Http\Controllers\ClassScheduleManagementController::class, 'show']);
+
+        // create a class schedule by management
+        Route::post('/', [App\Http\Controllers\ClassScheduleManagementController::class, 'store']);
+
+        // update a class schedule by management
+        Route::put('/{id}', [App\Http\Controllers\ClassScheduleManagementController::class, 'update']);
     });
 
     // attendance api group
@@ -164,6 +198,10 @@ Route::prefix('classes')->group(function () {
 
 
 Route::prefix('class-enrollments')->group(function () {
+    // get all class enrollments by student id
+    Route::get('/students/{student_id}', [App\Http\Controllers\ClassEnrollmentController::class, 'index']);
+
+    // confirm enrollment by token
     Route::post('/confirm', [App\Http\Controllers\ClassEnrollmentController::class, 'confirmEnrollment']);
 });
 

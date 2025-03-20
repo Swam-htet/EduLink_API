@@ -45,6 +45,14 @@ class StudentClassEnrollmentRepository implements StudentClassEnrollmentReposito
             ->get();
     }
 
+    public function getCompletedEnrollmentsByClassId(int $classId): Collection
+    {
+        return $this->model->with(['student', 'class'])
+            ->where('class_id', $classId)
+            ->where('status', 'completed')
+            ->get();
+    }
+
     public function getEnrollmentsByStudentId(int $studentId): Collection
     {
         return $this->model->with(['class'])
@@ -85,15 +93,70 @@ class StudentClassEnrollmentRepository implements StudentClassEnrollmentReposito
         return $query->paginate($filters['per_page'] ?? 15);
     }
 
+    /**
+     * Find enrollment by ID
+     *
+     * @param int $id
+     * @return StudentClassEnrollment|null
+     */
     public function findById(int $id): ?StudentClassEnrollment
     {
         return $this->model->with(['student', 'class'])->find($id);
+    }
+
+    /**
+     * Get paginated enrollments by student ID with filters
+     *
+     * @param int $studentId
+     * @param array $filters
+     * @return LengthAwarePaginator
+     */
+    public function getPaginatedEnrollmentsByStudentId(int $studentId, array $filters): LengthAwarePaginator
+    {
+        $query = $this->model->with(['student', 'class'])
+            ->where('student_id', $studentId);
+
+        // Apply class filter
+        if (isset($filters['class_id'])) {
+            $query->where('class_id', $filters['class_id']);
+        }
+
+        // Apply status filter
+        if (isset($filters['status'])) {
+            $query->where('status', $filters['status']);
+        }
+
+        // Apply enrolled date range filter
+        if (isset($filters['enrolled_date'])) {
+            $query->whereBetween('enrolled_at', [
+                $filters['enrolled_date']['start'],
+                $filters['enrolled_date']['end']
+            ]);
+        }
+
+        return $query->latest('enrolled_at')
+            ->paginate(15);
     }
 
     public function update(int $id, array $data): StudentClassEnrollment
     {
         $enrollment = $this->findById($id);
         $enrollment->update($data);
+        return $enrollment->fresh();
+    }
+
+    /**
+     * Update enrollment status
+     *
+     * @param StudentClassEnrollment $enrollment
+     * @param string $status
+     * @return StudentClassEnrollment
+     */
+    public function updateStatus(StudentClassEnrollment $enrollment, string $status): StudentClassEnrollment
+    {
+        $enrollment->status = $status;
+        $enrollment->save();
+
         return $enrollment->fresh();
     }
 }

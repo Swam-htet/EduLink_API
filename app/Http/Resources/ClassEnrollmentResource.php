@@ -22,9 +22,7 @@ class ClassEnrollmentResource extends JsonResource
             'class' => new ClassResource($this->class),
             'status' => $this->status,
             'enrolled_at' => $this->enrolled_at?->format('Y-m-d H:i:s'),
-            'remarks' => $this->remarks,
             'created_at' => $this->created_at->format('Y-m-d H:i:s'),
-            'updated_at' => $this->updated_at->format('Y-m-d H:i:s'),
         ];
     }
 }

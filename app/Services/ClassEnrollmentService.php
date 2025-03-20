@@ -7,6 +7,7 @@ use App\Helpers\TokenHelper;
 use App\Contracts\Repositories\StudentClassEnrollmentRepositoryInterface;
 use Illuminate\Validation\ValidationException;
 use App\Models\Tenants\StudentClassEnrollment;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 class ClassEnrollmentService implements ClassEnrollmentServiceInterface
 {
@@ -18,47 +19,56 @@ class ClassEnrollmentService implements ClassEnrollmentServiceInterface
     }
 
     /**
+     * Get enrollments by student ID with filters
+     *
+     * @param int $studentId
+     * @param array $filters
+     * @return LengthAwarePaginator
+     */
+    public function getEnrollmentsByStudentId(int $studentId, array $filters): LengthAwarePaginator
+    {
+        return $this->enrollmentRepository->getPaginatedEnrollmentsByStudentId($studentId, $filters);
+    }
+
+    /**
      * Confirm enrollment using token
      *
      * @param string $token
      * @return StudentClassEnrollment
-     * @throws \Exception
+     * @throws ValidationException
      */
     public function confirmEnrollment(string $token): StudentClassEnrollment
     {
         // Validate token
         $tokenRecord = TokenHelper::validateToken($token, 'enrollment');
 
-        if(!$tokenRecord) {
+        if (!$tokenRecord) {
             throw ValidationException::withMessages([
                 'token' => 'Invalid token'
             ]);
         }
 
-        // student
+        // Get enrollment
         $enrollment = $this->enrollmentRepository->findById($tokenRecord->tokenable_id);
 
-        if(!$enrollment) {
+        if (!$enrollment) {
             throw ValidationException::withMessages([
                 'token' => 'Enrollment not found'
             ]);
         }
 
-        $isFull = StudentClassEnrollment::where('class_id', $enrollment->class_id)->where('status', 'completed')->count() >= $enrollment->class->capacity;
+        $isFull = $this->enrollmentRepository->getCompletedEnrollmentsByClassId($enrollment->class_id)->count() >= $enrollment->class->capacity;
 
-        $condition = $enrollment->status !== 'enrolled' || $enrollment->class->start_date->isPast() || $isFull;
-        if($condition) {
+        if ($enrollment->status !== 'enrolled' || $enrollment->class->start_date->isPast() || $isFull) {
             throw ValidationException::withMessages([
                 'token' => 'Can\'t confirm enrollment because of invalid status or class has already started or full.'
             ]);
         }
 
-        // update enrollment status to 'completed'
-        $enrollment->status = 'completed';
+        // Update enrollment status
+        $enrollment = $this->enrollmentRepository->updateStatus($enrollment, 'completed');
 
-        $enrollment->save();
-
-        // make token as used
+        // Mark token as used
         TokenHelper::markTokenAsUsed($token, 'enrollment');
 
         return $enrollment;
