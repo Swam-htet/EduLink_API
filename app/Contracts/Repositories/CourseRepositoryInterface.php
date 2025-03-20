@@ -13,15 +13,16 @@ interface CourseRepositoryInterface
      * @param array $filters
      * @return
      */
-    public function getAll(): Collection;
+    public function getAll(array $filters): Collection;
 
 
     /**
      * Get all active courses
      *
+     * @param array $filters
      * @return Collection
      */
-    public function getAllActiveCourses(): Collection;
+    public function getAllActiveCourses(array $filters): Collection;
 
     /**
      * Find course by ID

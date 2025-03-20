@@ -15,7 +15,8 @@ class Student extends Authenticatable
     use HasApiTokens, Notifiable, SoftDeletes, UsesTenantConnection;
 
     protected $fillable = [
-        'name',
+        'first_name',
+        'last_name',
         'email',
         'password',
         'phone',

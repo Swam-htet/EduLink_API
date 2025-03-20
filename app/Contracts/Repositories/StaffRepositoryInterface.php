@@ -3,15 +3,16 @@
 namespace App\Contracts\Repositories;
 
 use App\Models\Tenants\Staff;
-
+use Illuminate\Pagination\LengthAwarePaginator;
 interface StaffRepositoryInterface
 {
     /**
      * Get all staff members
      *
-     * @return array
+     * @param array $filters
+     * @return LengthAwarePaginator
      */
-    public function getAll() : array;
+    public function getAll(array $filters) : LengthAwarePaginator;
 
     /**
      * Get staff member by id

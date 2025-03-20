@@ -14,7 +14,8 @@ class ApproveRegistrationRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'student_id' => 'required|string|exists:tenant.students,student_id'
+            // todo : student ids need to be an array
+            'id' => 'required|integer|exists:tenant.students,id'
         ];
     }
 }

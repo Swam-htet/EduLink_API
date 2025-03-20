@@ -3,7 +3,7 @@
 namespace App\Contracts\Services;
 
 use App\Models\Tenants\Student;
-
+use Illuminate\Pagination\LengthAwarePaginator;
 interface StudentManagementServiceInterface
 {
     /**
@@ -21,4 +21,12 @@ interface StudentManagementServiceInterface
      * @return Student
      */
     public function rejectRegistration(array $data): Student;
+
+    /**
+     * Get all students with filters
+     *
+     * @param array $filters
+     * @return LengthAwarePaginator
+     */
+    public function getAllStudents(array $filters): LengthAwarePaginator;
 }

@@ -17,11 +17,20 @@ class SubjectService implements SubjectServiceInterface
         $this->subjectRepository = $subjectRepository;
     }
 
-    public function getAllActiveSubjects(): Collection
+    /**
+     * Get all active subjects
+     * @return Collection
+     */
+    public function getAllActiveSubjects(array $filters): Collection
     {
-        return $this->subjectRepository->getAllActive();
+        return $this->subjectRepository->getAllActive($filters);
     }
 
+    /**
+     * Get active subject by id
+     * @param int $id
+     * @return Subject|null
+     */
     public function getActiveSubjectById(int $id): Subject
     {
         $subject = $this->subjectRepository->findActiveById($id);

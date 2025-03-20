@@ -7,6 +7,8 @@ use App\Models\Tenants\Staff;
 use Exception;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Pagination\LengthAwarePaginator;
+
 class StaffRepository implements StaffRepositoryInterface
 {
     protected $model;
@@ -19,11 +21,54 @@ class StaffRepository implements StaffRepositoryInterface
     /**
      * Get all staff members
      *
-     * @return array
+     * @param array $filters
+     * @return LengthAwarePaginator
      */
-    public function getAll() : array
+    public function getAll(array $filters) : LengthAwarePaginator
     {
-        return $this->model->all()->toArray();
+        $query = $this->model->query();
+
+        if (isset($filters['name'])) {
+            $query->where('name', 'like', '%' . $filters['name'] . '%');
+        }
+
+        if (isset($filters['email'])) {
+            $query->where('email', 'like', '%' . $filters['email'] . '%');
+        }
+
+        if (isset($filters['phone'])) {
+            $query->where('phone', 'like', '%' . $filters['phone'] . '%');
+        }
+
+        if (isset($filters['nrc'])) {
+            $query->where('nrc', 'like', '%' . $filters['nrc'] . '%');
+        }
+
+        if (isset($filters['status'])) {
+            $query->where('status', $filters['status']);
+        }
+
+        if (isset($filters['role'])) {
+            $query->where('role', $filters['role']);
+        }
+
+        if (isset($filters['gender'])) {
+            $query->where('gender', $filters['gender']);
+        }
+
+        if (isset($filters['date_of_birth'])) {
+            $query->whereBetween('date_of_birth', [$filters['date_of_birth']['start'], $filters['date_of_birth']['end']]);
+        }
+
+        if (isset($filters['joined_date'])) {
+            $query->whereBetween('joined_date', [$filters['joined_date']['start'], $filters['joined_date']['end']]);
+        }
+
+        if (isset($filters['sort_by'])) {
+            $query->orderBy($filters['sort_by'], $filters['sort_direction']);
+        }
+
+        return $query->paginate($filters['per_page']);
     }
 
     /**

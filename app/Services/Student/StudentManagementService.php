@@ -7,6 +7,7 @@ use App\Contracts\Repositories\StudentRepositoryInterface;
 use App\Models\Tenants\Student;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 class StudentManagementService implements StudentManagementServiceInterface
 {
@@ -27,11 +28,11 @@ class StudentManagementService implements StudentManagementServiceInterface
     {
         DB::beginTransaction();
         try {
-            $student = $this->studentRepository->findByStudentId($data['student_id']);
+            $student = $this->studentRepository->findById($data['id']);
 
             if (!$student) {
                 throw ValidationException::withMessages([
-                    'student_id' => ['Student not found.']
+                    'id' => ['Student not found.']
                 ]);
             }
 
@@ -67,11 +68,11 @@ class StudentManagementService implements StudentManagementServiceInterface
     {
         DB::beginTransaction();
         try {
-            $student = $this->studentRepository->findByStudentId($data['student_id']);
+            $student = $this->studentRepository->findById($data['id']);
 
             if (!$student) {
                 throw ValidationException::withMessages([
-                    'student_id' => ['Student not found.']
+                    'id' => ['Student not found.']
                 ]);
             }
 
@@ -83,7 +84,7 @@ class StudentManagementService implements StudentManagementServiceInterface
 
             // Update student status to rejected
             $student = $this->studentRepository->update($student->id, [
-                'status' => 'inactive',
+                'status' => 'rejected',
             ]);
 
             // todo : send rejection email to student
@@ -95,5 +96,10 @@ class StudentManagementService implements StudentManagementServiceInterface
             DB::rollBack();
             throw $e;
         }
+    }
+
+    public function getAllStudents(array $filters): LengthAwarePaginator
+    {
+        return $this->studentRepository->getPaginatedStudents($filters);
     }
 }

@@ -12,7 +12,7 @@ interface SubjectServiceInterface
      *
      * @return Collection
      */
-    public function getAllActiveSubjects(): Collection;
+    public function getAllActiveSubjects(array $filters): Collection;
 
     /**
      * Get active subject by ID

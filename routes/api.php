@@ -1,135 +1,7 @@
 <?php
 
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Resources\TenantResource;
-use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Mail;
-use App\Mail\Student\RegistrationPendingMail;
-use App\Mail\Student\ForgotPasswordOtpMail;
-use App\Mail\Student\PasswordChangeOtpMail;
-use App\Mail\Student\PasswordChangeSuccessMail;
-use App\Mail\Student\RegistrationApprovedMail;
-use App\Mail\Student\RegistrationRejectedMail;
 
-// test routes
-Route::group(['prefix' => 'test'], function () {
-    Route::get('/', function (Request $request) {
-        return response()->json(['message' => 'Hello, World!', 'tenant' => new TenantResource($request->attributes->get('tenant'))]);
-    });
-
-    // test mail with queue
-    Route::post('/mail', function (Request $request) {
-        $mailTypes = [
-            'registration_pending' => [
-                'mailable' => RegistrationPendingMail::class,
-                'data' => [
-                    'name' => 'Test Student',
-                    'email' => 'test@test.com',
-                    'student_id' => 'STU001'
-                ]
-            ],
-            'forgot_password_otp' => [
-                'mailable' => ForgotPasswordOtpMail::class,
-                'data' => [
-                    'name' => 'Test Student',
-                    'email' => 'test@test.com',
-                    'otp' => '123456',
-                    'expires_in' => '10 minutes'
-                ]
-            ],
-            'password_change_otp' => [
-                'mailable' => PasswordChangeOtpMail::class,
-                'data' => [
-                    'name' => 'Test Student',
-                    'email' => 'test@test.com',
-                    'otp' => '123456',
-                    'expires_in' => '10 minutes'
-                ]
-            ],
-            'password_change_success' => [
-                'mailable' => PasswordChangeSuccessMail::class,
-                'data' => [
-                    'name' => 'Test Student',
-                    'email' => 'test@test.com'
-                ]
-            ],
-            'registration_approved' => [
-                'mailable' => RegistrationApprovedMail::class,
-                'data' => [
-                    'name' => 'Test Student',
-                    'email' => 'test@test.com',
-                    'student_id' => 'STU001',
-                    'login_url' => url('/login')
-                ]
-            ],
-            'registration_rejected' => [
-                'mailable' => RegistrationRejectedMail::class,
-                'data' => [
-                    'name' => 'Test Student',
-                    'email' => 'test@test.com',
-                    'reason' => 'Invalid documentation provided'
-                ]
-            ]
-        ];
-
-        $results = [];
-
-        foreach ($mailTypes as $type => $config) {
-            try {
-                $mailable = new $config['mailable']($config['data']);
-                Mail::to($config['data']['email'])->send($mailable);
-
-                $results[$type] = [
-                    'status' => 'success',
-                    'message' => ucfirst(str_replace('_', ' ', $type)) . ' mail sent successfully'
-                ];
-            } catch (\Exception $e) {
-                $results[$type] = [
-                    'status' => 'error',
-                    'message' => $e->getMessage()
-                ];
-            }
-        }
-
-        return response()->json([
-            'message' => 'Mail sending process completed',
-            'results' => $results
-        ]);
-    });
-
-    // test cache operations
-    Route::get('/cache/test', function (Request $request) {
-        // Set some test values
-        Cache::put('test_string', 'Hello from Cache!', 3600); // 1 hour
-        Cache::put('test_array', ['key' => 'value'], 3600);
-
-        // Get the values back
-        $string = Cache::get('test_string');
-        $array = Cache::get('test_array');
-
-        return response()->json([
-            'success' => true,
-            'data' => [
-                'cache' => [
-                    'string' => $string,
-                    'array' => $array,
-                    'missing' => Cache::get('non_existent', 'default_value')
-                    ],
-            ]
-        ]);
-    });
-
-    // test file upload
-    Route::post('/upload', function (Request $request) {
-        $file = $request->file('file');
-        dd($file);
-
-        return response()->json(['message' => 'File uploaded successfully']);
-    });
-
-
-});
 
 // auth api group
 Route::prefix('auth')->group(function () {
@@ -170,12 +42,20 @@ Route::prefix('students')->group(function () {
 });
 
 Route::prefix('staff')->group(function () {
+    // update staff profile
     // Route::put('/update-profile', [App\Http\Controllers\Auth\StaffController::class, 'updateProfile']);
+
+    // reset password
+    // Route::post('/reset-password', [App\Http\Controllers\Auth\StaffController::class, 'resetPassword']);
 });
 
 // management api group with staff guard middleware
-Route::middleware('auth:staff')->prefix('management')->group(function () {
-    Route::prefix('student')->group(function () {
+// todo : need to add middleware for this management route group
+Route::prefix('management')->group(function () {
+    Route::prefix('students')->group(function () {
+
+        Route::get('/', [App\Http\Controllers\StudentManagementController::class, 'index']);
+
         Route::post('/approve-registration', [App\Http\Controllers\StudentManagementController::class, 'approveRegistration']);
 
         Route::post('/reject-registration', [App\Http\Controllers\StudentManagementController::class, 'rejectRegistration']);
@@ -193,11 +73,12 @@ Route::middleware('auth:staff')->prefix('management')->group(function () {
 
         // create a staff
         Route::post('/', [App\Http\Controllers\StaffManagementController::class, 'create']);
+
         // // update staff
         // Route::put('/{id}', [App\Http\Controllers\StaffManagementController::class, 'update']);
 
         // // reset staff password
-        // Route::post('/{id}/reset-password', [App\Http\Controllers\StaffManagementController::class, 'resetPassword']);
+        // Route::get('/{id}/reset-password', [App\Http\Controllers\StaffManagementController::class, 'resetPassword']);
     });
 
     // course api group
@@ -226,15 +107,24 @@ Route::middleware('auth:staff')->prefix('management')->group(function () {
     });
 
     // enroll student to class
-    Route::prefix('class-enrollment')->group(function () {
+    Route::prefix('class-enrollments')->group(function () {
+        Route::get('/', [App\Http\Controllers\ClassEnrollmentManagementController::class, 'index']);
+
+        Route::put('/{id}', [App\Http\Controllers\ClassEnrollmentManagementController::class, 'update']);
+
         Route::post('/', [App\Http\Controllers\ClassEnrollmentManagementController::class, 'enrollStudent']);
+
+        // sent manual class enrollment email
+        Route::post('/send-email', [App\Http\Controllers\ClassEnrollmentManagementController::class, 'sendManualEnrollmentEmail']);
+
+        Route::post('/confirm/{token?}', [App\Http\Controllers\ClassEnrollmentController::class, 'confirmEnrollment']);
     });
 
     // class schedule api group
-    Route::prefix('class-schedule')->group(function () {
-        // Route::get('/', [App\Http\Controllers\ClassScheduleManagementController::class, 'index']);
-        // Route::get('/{id}', [App\Http\Controllers\ClassScheduleManagementController::class, 'show']);
-        // Route::post('/', [App\Http\Controllers\ClassScheduleManagementController::class, 'store']);
+    Route::prefix('class-schedules')->group(function () {
+        Route::get('/', [App\Http\Controllers\ClassScheduleManagementController::class, 'index']);
+        Route::get('/{id}', [App\Http\Controllers\ClassScheduleManagementController::class, 'show']);
+        Route::post('/', [App\Http\Controllers\ClassScheduleManagementController::class, 'store']);
     });
 
     // config api group
@@ -270,6 +160,11 @@ Route::prefix('subjects')->group(function () {
 Route::prefix('classes')->group(function () {
     Route::get('/', [App\Http\Controllers\ClassController::class, 'index']);
     Route::get('/{id}', [App\Http\Controllers\ClassController::class, 'show']);
+});
+
+
+Route::prefix('class-enrollments')->group(function () {
+    Route::post('/confirm', [App\Http\Controllers\ClassEnrollmentController::class, 'confirmEnrollment']);
 });
 
 // class schedule api group

@@ -27,10 +27,15 @@ class StaffAccCreateRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => 'required|string|max:255',
+            'first_name' => 'required|string|max:255',
+            'last_name' => 'required|string|max:255',
             'email' => 'required|email|unique:tenant.staff,email',
             'phone' => 'required|string|max:20',
             'role' => 'required|string|in:admin,teacher,staff',
+            'nrc' => 'required|string|max:255',
+            'gender' => 'required|string|in:male,female',
+            'date_of_birth' => 'required|date',
+            'address' => 'required|string|max:255',
         ];
     }
 
@@ -42,8 +47,10 @@ class StaffAccCreateRequest extends FormRequest
     public function messages()
     {
         return [
-            'name.required' => 'The name field is required',
-            'name.max' => 'The name must not exceed 255 characters',
+            'first_name.required' => 'The first name field is required',
+            'first_name.max' => 'The first name must not exceed 255 characters',
+            'last_name.required' => 'The last name field is required',
+            'last_name.max' => 'The last name must not exceed 255 characters',
             'email.required' => 'The email field is required',
             'email.email' => 'Please provide a valid email address',
             'email.unique' => 'This email is already registered',

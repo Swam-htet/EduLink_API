@@ -6,10 +6,9 @@ use App\Contracts\Services\StaffManagementServiceInterface;
 use Illuminate\Support\Facades\DB;
 use App\Models\Tenants\Staff;
 use App\Contracts\Repositories\StaffRepositoryInterface;
-use App\Exceptions\DataCreationException;
-use Illuminate\Support\Facades\Hash;
 use App\Contracts\Services\Mail\MailServiceInterface;
 use Exception;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 class StaffManagementService implements StaffManagementServiceInterface
 {
@@ -25,11 +24,12 @@ class StaffManagementService implements StaffManagementServiceInterface
     /**
      * Get all staff members
      *
-     * @return array
+     * @param array $filters
+     * @return LengthAwarePaginator
      */
-    public function getAllStaffs() : array
+    public function getAllStaffs(array $filters) : LengthAwarePaginator
     {
-        return $this->staffRepository->getAll();
+        return $this->staffRepository->getAll($filters);
     }
 
     /**
@@ -47,8 +47,7 @@ class StaffManagementService implements StaffManagementServiceInterface
      * Create a new staff member
      *
      * @param array $data
-     * @return array
-     * @throws DataCreationException
+     * @return Staff
      */
     public function createStaff(array $data) : Staff
     {

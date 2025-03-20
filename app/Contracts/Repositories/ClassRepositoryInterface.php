@@ -3,16 +3,17 @@
 namespace App\Contracts\Repositories;
 
 use App\Models\Tenants\Classes;
-use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 interface ClassRepositoryInterface
 {
     /**
      * Get all classes
      *
-     * @return Collection
+     * @param array $filters
+     * @return LengthAwarePaginator
      */
-    public function getAll(): Collection;
+    public function getAll(array $filters): LengthAwarePaginator;
 
     /**
      * Find class by ID

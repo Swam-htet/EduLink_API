@@ -6,6 +6,7 @@ use App\Contracts\Repositories\CourseRepositoryInterface;
 use App\Models\Tenants\Course;
 use Illuminate\Database\Eloquent\Collection;
 
+
 class CourseRepository implements CourseRepositoryInterface
 {
     protected $model;
@@ -15,21 +16,70 @@ class CourseRepository implements CourseRepositoryInterface
         $this->model = $model;
     }
 
-    public function getAll(): Collection
+    /**
+     * Get all courses
+     * @return Collection
+     */
+    public function getAll(array $filters): Collection
     {
-        return $this->model->all();
+        $query = $this->model->query();
+
+        if (isset($filters['title'])) {
+            $query->where('title', 'like', "%{$filters['title']}%");
+        }
+
+        if (isset($filters['code'])) {
+            $query->where('code', 'like', "%{$filters['code']}%");
+        }
+
+        if (isset($filters['status'])) {
+            $query->where('status', $filters['status']);
+        }
+
+        $query->orderBy($filters['sort_by'] ?? 'created_at', $filters['sort_direction'] ?? 'desc');
+
+        return $query->get();
     }
 
-    public function getAllActiveCourses(): Collection
+    /**
+     * Get all active courses
+     * @return Collection
+     */
+    public function getAllActiveCourses(array $filters): Collection
     {
-        return $this->model->where('status', 'active')->get();
+        $query = $this->model->query();
+
+        if (isset($filters['title'])) {
+            $query->where('title', 'like', "%{$filters['title']}%");
+        }
+
+        if (isset($filters['code'])) {
+            $query->where('code', 'like', "%{$filters['code']}%");
+        }
+
+        // status is active
+        $query->where('status', 'active');
+
+        $query->orderBy($filters['sort_by'] ?? 'created_at', $filters['sort_direction'] ?? 'desc');
+
+        return $query->get();
     }
 
+    /**
+     * Get course by id
+     * @param int $id
+     * @return Course|null
+     */
     public function findById(int $id): ?Course
     {
         return $this->model->find($id);
     }
 
+    /**
+     * Create a new course
+     * @param array $data
+     * @return Course
+     */
     public function create(array $data): Course
     {
         // default status is active
@@ -38,6 +88,12 @@ class CourseRepository implements CourseRepositoryInterface
         return $this->model->create($data);
     }
 
+    /**
+     * Update a course
+     * @param int $id
+     * @param array $data
+     * @return Course
+     */
     public function update(int $id, array $data): Course
     {
         $course = $this->findById($id);
@@ -45,12 +101,20 @@ class CourseRepository implements CourseRepositoryInterface
         return $course->fresh();
     }
 
+    /**
+     * Delete a course
+     * @param int $id
+     * @return bool
+     */
     public function delete(int $id): bool
     {
         return (bool) $this->model->destroy($id);
     }
 
-    // generate course code
+    /**
+     * Generate course code
+     * @return string
+     */
     private function generateCourseCode(): string
     {
         $prefix = 'CR';

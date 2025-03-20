@@ -12,14 +12,11 @@ return new class extends Migration
             $table->id();
             $table->foreignId('class_id')->constrained()->onDelete('cascade');
             $table->foreignId('staff_id')->constrained('staff')->onDelete('restrict');
-            $table->string('room')->nullable();
-            $table->enum('day_of_week', ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday']);
+            $table->date('date');
             $table->time('start_time');
             $table->time('end_time');
-            $table->boolean('is_recurring')->default(true);
-            $table->date('effective_from');
-            $table->date('effective_until')->nullable();
-            $table->enum('status', ['active', 'cancelled'])->default('active');
+            $table->integer('late_mins')->default(0);
+            $table->enum('status', ['active', 'cancelled', 'completed'])->default('active');
             $table->text('cancellation_reason')->nullable();
             $table->timestamps();
             $table->softDeletes();

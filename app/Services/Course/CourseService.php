@@ -20,13 +20,11 @@ class CourseService implements CourseServiceInterface
     /**
      * Get all active courses with pagination
      *
+     * @param array $filters
      * @return Collection
      */
-    public function getAllActiveCourses(): Collection
+    public function getAllActiveCourses(array $filters): Collection
     {
-        // Ensure we only get active courses
-        $filters['status'] = 'active';
-
         return $this->courseRepository->getAllActiveCourses($filters);
     }
 

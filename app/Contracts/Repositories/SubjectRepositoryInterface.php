@@ -12,7 +12,7 @@ interface SubjectRepositoryInterface
      *
      * @return Collection
      */
-    public function getAll(): Collection;
+    public function getAll(array $filters): Collection;
 
     /**
      * Find subject by ID
@@ -44,7 +44,7 @@ interface SubjectRepositoryInterface
      *
      * @return Collection
      */
-    public function getAllActive(): Collection;
+    public function getAllActive(array $filters): Collection;
 
     /**
      * Find active subject by ID

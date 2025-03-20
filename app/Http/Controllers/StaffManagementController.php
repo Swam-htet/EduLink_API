@@ -6,6 +6,8 @@ use App\Contracts\Services\StaffManagementServiceInterface;
 use App\Http\Requests\Staff\StaffAccCreateRequest;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
+use App\Http\Requests\Staff\ListStaffRequest;
+use App\Http\Resources\Management\ManagementStaffResource;
 
 class StaffManagementController extends Controller
 {
@@ -16,19 +18,37 @@ class StaffManagementController extends Controller
         $this->staffManagementService = $staffManagementService;
     }
 
-    public function index(): JsonResponse
+    /**
+     * Get all staff members
+     * @return JsonResponse
+     */
+    public function index(ListStaffRequest $request): JsonResponse
     {
-        $staffs = $this->staffManagementService->getAllStaffs();
-        return response()->json($staffs);
+        $value = $this->staffManagementService->getAllStaffs($request->filters());
+
+        return response()->json([
+            'data' => ManagementStaffResource::collection($value->items()),
+            'meta' => [
+                'total' => $value->total(),
+                'per_page' => $value->perPage(),
+                'current_page' => $value->currentPage(),
+                'last_page' => $value->lastPage(),
+            ]
+        ]);
     }
 
+    /**
+     * Get staff member by id
+     * @param int $id
+     * @return JsonResponse
+     */
     public function show($id): JsonResponse
     {
         $staff = $this->staffManagementService->getStaffById($id);
-        return response()->json($staff);
+        return response()->json([
+            'data' => new ManagementStaffResource($staff)
+        ]);
     }
-
-
 
     /**
      * Create a new staff member
@@ -41,7 +61,7 @@ class StaffManagementController extends Controller
         $staff = $this->staffManagementService->createStaff($request->validated());
         return response()->json([
             'message' => 'Staff created successfully',
-            'data' => $staff
+            'data' => new ManagementStaffResource($staff)
         ], Response::HTTP_CREATED);
     }
 }

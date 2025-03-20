@@ -8,6 +8,8 @@ use App\Contracts\Services\StaffAuthServiceInterface;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
 use Illuminate\Http\Request;
+use App\Http\Resources\StaffResource;
+
 class StaffAuthController extends Controller
 {
     protected $staffAuthService;
@@ -60,7 +62,7 @@ class StaffAuthController extends Controller
 
         return response()->json([
             'message' => 'Profile retrieved successfully',
-            'data' => $staff
+            'data' => new StaffResource($staff)
         ], Response::HTTP_OK);
     }
 }

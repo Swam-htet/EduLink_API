@@ -11,7 +11,8 @@ return new class extends Migration
         Schema::create('students', function (Blueprint $table) {
             $table->id();
             $table->string('student_id')->unique();
-            $table->string('name');
+            $table->string('first_name');
+            $table->string('last_name');
             $table->string('email')->unique();
             $table->string('phone')->nullable();
             $table->string('password');
@@ -19,7 +20,7 @@ return new class extends Migration
             $table->date('date_of_birth')->nullable();
             $table->text('address')->nullable();
             $table->date('enrollment_date')->default(now());
-            $table->enum('status', ['pending', 'active', 'inactive', 'graduated', 'suspended', 'rejected'])->default('pending');
+            $table->enum('status', ['pending', 'active', 'inactive', 'suspended', 'rejected'])->default('pending');
             $table->string('guardian_name')->nullable();
             $table->string('guardian_phone')->nullable();
             $table->string('guardian_relationship')->nullable();

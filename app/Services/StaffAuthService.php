@@ -6,6 +6,7 @@ use App\Contracts\Services\StaffAuthServiceInterface;
 use App\Models\Tenants\Staff;
 use Illuminate\Support\Facades\Hash;
 use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
+use App\Http\Resources\StaffResource;
 
 class StaffAuthService implements StaffAuthServiceInterface
 {
@@ -30,7 +31,7 @@ class StaffAuthService implements StaffAuthServiceInterface
         $tokenResult = $staff->createToken('staff-token', ['staff']);
 
         return [
-                'staff' => $staff,
+                'staff' => new StaffResource($staff),
                 'token' => $tokenResult->accessToken,
                 'expires_at' => $tokenResult->token->expires_at,
                 'token_type' => 'Bearer'

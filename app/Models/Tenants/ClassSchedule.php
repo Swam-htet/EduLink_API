@@ -14,13 +14,10 @@ class ClassSchedule extends Model
     protected $fillable = [
         'class_id',
         'staff_id',
-        'room',
-        'day_of_week',
+        'date',
         'start_time',
         'end_time',
-        'is_recurring',
-        'effective_from',
-        'effective_until',
+        'late_mins',
         'status',
         'cancellation_reason',
     ];
@@ -28,9 +25,7 @@ class ClassSchedule extends Model
     protected $casts = [
         'start_time' => 'datetime',
         'end_time' => 'datetime',
-        'is_recurring' => 'boolean',
-        'effective_from' => 'date',
-        'effective_until' => 'date',
+        'late_mins' => 'integer',
     ];
 
     // Relationships

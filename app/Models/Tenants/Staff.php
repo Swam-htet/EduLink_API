@@ -16,14 +16,15 @@ class Staff extends Authenticatable
 
     protected $fillable = [
         'staff_id',
-        'name',
+        'first_name',
+        'last_name',
         'email',
         'password',
         'phone',
         'gender',
         'date_of_birth',
         'address',
-        'type',
+        'role',
         'nrc',
         'profile_photo',
         'joined_date',

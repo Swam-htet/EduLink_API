@@ -5,7 +5,7 @@ namespace App\Services\Class;
 use App\Contracts\Services\ClassServiceInterface;
 use App\Contracts\Repositories\ClassRepositoryInterface;
 use App\Models\Tenants\Classes;
-use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Validation\ValidationException;
 
 class ClassService implements ClassServiceInterface
@@ -20,11 +20,12 @@ class ClassService implements ClassServiceInterface
     /**
      * Get all active classes
      *
-     * @return Collection
+     * @param array $filters
+     * @return LengthAwarePaginator
      */
-    public function getAllClasses(): Collection
+    public function getAllClasses(array $filters): LengthAwarePaginator
     {
-        return $this->classRepository->getAll();
+        return $this->classRepository->getAll($filters);
     }
 
     /**

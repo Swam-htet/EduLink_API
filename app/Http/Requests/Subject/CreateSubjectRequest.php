@@ -19,7 +19,7 @@ class CreateSubjectRequest extends FormRequest
                 'integer',
                 Rule::exists('tenant.courses', 'id')->whereNull('deleted_at'),
             ],
-            'name' => 'required|string|max:255',
+            'title' => 'required|string|max:255',
             'description' => 'required|string',
             'credits' => 'required|integer|min:1',
         ];

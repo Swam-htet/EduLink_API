@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Contracts\Services\SubjectServiceInterface;
 use App\Http\Requests\Subject\FindSubjectByIdRequest;
+use App\Http\Requests\Subject\ListSubjectRequest;
+use App\Http\Resources\SubjectResource;
 use Illuminate\Http\JsonResponse;
 
 class SubjectController extends Controller
@@ -20,12 +22,12 @@ class SubjectController extends Controller
      *
      * @return JsonResponse
      */
-    public function index(): JsonResponse
+    public function index(ListSubjectRequest $request): JsonResponse
     {
-        $subjects = $this->subjectService->getAllActiveSubjects();
+        $subjects = $this->subjectService->getAllActiveSubjects($request->filters());
 
         return response()->json([
-            'data' => $subjects
+            'data' => SubjectResource::collection($subjects)
         ]);
     }
 
@@ -40,7 +42,7 @@ class SubjectController extends Controller
         $subject = $this->subjectService->getActiveSubjectById($request->id);
 
         return response()->json([
-            'data' => $subject
+            'data' => new SubjectResource($subject)
         ]);
     }
 }

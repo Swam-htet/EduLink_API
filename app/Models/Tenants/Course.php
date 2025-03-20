@@ -12,7 +12,7 @@ class Course extends Model
     use SoftDeletes, UsesTenantConnection;
 
     protected $fillable = [
-        'name',
+        'title',
         'code',
         'description',
         'duration',

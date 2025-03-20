@@ -12,7 +12,7 @@ interface CourseServiceInterface
      *
      * @return Collection
      */
-    public function getAllActiveCourses(): Collection;
+    public function getAllActiveCourses(array $filters): Collection;
 
     /**
      * Get active course by ID

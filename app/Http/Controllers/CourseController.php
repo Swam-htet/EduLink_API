@@ -3,9 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Contracts\Services\CourseServiceInterface;
-use App\Http\Requests\Course\FindCourseByIdRequest;
+use App\Http\Requests\Course\ListCourseRequest;
+use App\Http\Resources\CourseResource;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 
 class CourseController extends Controller
 {
@@ -19,29 +19,31 @@ class CourseController extends Controller
     /**
      * Get all active courses
      *
+     * @param ListCourseRequest $request
      * @return JsonResponse
      */
-    public function index(): JsonResponse
+    public function index(ListCourseRequest $request): JsonResponse
     {
-        $courses = $this->courseService->getAllActiveCourses();
+        dd($request->validated());
+        $courses = $this->courseService->getAllActiveCourses($request->filters());
 
         return response()->json([
-            'data' => $courses
+            'data' => CourseResource::collection($courses)
         ]);
     }
 
     /**
-     * Get active course by ID
+     * Get active course by id
      *
-     * @param FindCourseByIdRequest $request
+     * @param int $id
      * @return JsonResponse
      */
-    public function show(FindCourseByIdRequest $request): JsonResponse
+    public function show(int $id): JsonResponse
     {
-        $course = $this->courseService->getActiveCourseById($request->id);
+        $course = $this->courseService->getActiveCourseById($id);
 
         return response()->json([
-            'data' => $course
+            'data' => new CourseResource($course)
         ]);
     }
 }

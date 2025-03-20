@@ -12,7 +12,6 @@ return new class extends Migration
             $table->id();
             $table->foreignId('class_schedule_id')->constrained()->onDelete('cascade');
             $table->foreignId('student_id')->constrained()->onDelete('cascade');
-            $table->date('date');
             $table->enum('status', ['present', 'absent', 'late', 'excused'])->default('absent');
             $table->time('time_in')->nullable();
             $table->time('time_out')->nullable();
@@ -21,7 +20,7 @@ return new class extends Migration
             $table->softDeletes();
 
             // Prevent duplicate attendance records
-            $table->unique(['class_schedule_id', 'student_id', 'date']);
+            $table->unique(['class_schedule_id', 'student_id']);
         });
     }
 

@@ -14,7 +14,7 @@ class RejectRegistrationRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'student_id' => 'required|string|exists:tenant.students,student_id',
+            'id' => 'required|integer|exists:tenant.students,id',
             'reason' => 'required|string|max:500'
         ];
     }

@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Contracts\Services\ClassServiceInterface;
 use App\Http\Requests\Class\FindClassByIdRequest;
+use App\Http\Requests\Class\ListClassRequest;
+use App\Http\Resources\ClassResource;
 use Illuminate\Http\JsonResponse;
 
 class ClassController extends Controller
@@ -20,12 +22,19 @@ class ClassController extends Controller
      *
      * @return JsonResponse
      */
-    public function index(): JsonResponse
+    // todo : need to create filter request
+    public function index(ListClassRequest $request): JsonResponse
     {
-        $classes = $this->classService->getAllClasses();
+        $value = $this->classService->getAllClasses($request->filters());
 
         return response()->json([
-            'data' => $classes
+            'data' => ClassResource::collection($value->items()),
+            'meta' => [
+                'total' => $value->total(),
+                'per_page' => $value->perPage(),
+                'current_page' => $value->currentPage(),
+                'last_page' => $value->lastPage(),
+            ]
         ]);
     }
 
@@ -40,7 +49,7 @@ class ClassController extends Controller
         $class = $this->classService->getClassById($request->id);
 
         return response()->json([
-            'data' => $class
+            'data' => new ClassResource($class)
         ]);
     }
 }

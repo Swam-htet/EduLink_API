@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\Student\StudentRegistrationRequest;
 use App\Contracts\Services\StudentRegistrationServiceInterface;
 use Illuminate\Http\Response;
-
+use App\Http\Resources\StudentResource;
 class StudentController extends Controller
 {
     protected $registrationService;
@@ -17,18 +17,11 @@ class StudentController extends Controller
 
     public function register(StudentRegistrationRequest $request)
     {
-        try {
-            $student = $this->registrationService->register($request->validated());
+        $student = $this->registrationService->register($request->validated());
 
-            return response()->json([
-                'message' => 'Registration successful. Please wait for admin approval.',
-                'data' => $student
-            ], Response::HTTP_CREATED);
-        } catch (\Exception $e) {
-            return response()->json([
-                'message' => 'Registration failed.',
-                'error' => $e->getMessage()
-            ], Response::HTTP_BAD_REQUEST);
-        }
+        return response()->json([
+            'message' => 'Registration successful. Please wait for admin approval.',
+            'data' => new StudentResource($student)
+        ], Response::HTTP_CREATED);
     }
 }

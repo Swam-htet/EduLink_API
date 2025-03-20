@@ -6,7 +6,6 @@ use App\Contracts\Services\SubjectManagementServiceInterface;
 use App\Contracts\Repositories\SubjectRepositoryInterface;
 use App\Models\Tenants\Subject;
 use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Validation\ValidationException;
 
 class SubjectManagementService implements SubjectManagementServiceInterface
 {
@@ -17,21 +16,41 @@ class SubjectManagementService implements SubjectManagementServiceInterface
         $this->subjectRepository = $subjectRepository;
     }
 
-    public function getAllSubjects(): Collection
+    /**
+     * Get all subjects
+     * @return Collection
+     */
+    public function getAllSubjects(array $filters): Collection
     {
-        return $this->subjectRepository->getAll();
+        return $this->subjectRepository->getAll($filters);
     }
 
+    /**
+     * Get subject by id
+     * @param int $id
+     * @return Subject|null
+     */
     public function getSubjectById(int $id): Subject
     {
         return $this->subjectRepository->findById($id);
     }
 
+    /**
+     * Create a new subject
+     * @param array $data
+     * @return Subject
+     */
     public function createSubject(array $data): Subject
     {
         return $this->subjectRepository->create($data);
     }
 
+    /**
+     * Update a subject
+     * @param int $id
+     * @param array $data
+     * @return Subject
+     */
     public function updateSubject(int $id, array $data): Subject
     {
         return $this->subjectRepository->update($id, $data);

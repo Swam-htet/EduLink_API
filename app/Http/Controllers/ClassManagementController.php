@@ -8,6 +8,8 @@ use App\Http\Requests\Class\FindClassByIdRequest;
 use App\Contracts\Services\ClassManagementServiceInterface;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
+use App\Http\Requests\Class\ListClassRequest;
+use App\Http\Resources\Management\ManagementClassResource;
 
 class ClassManagementController extends Controller
 {
@@ -18,34 +20,60 @@ class ClassManagementController extends Controller
         $this->classService = $classService;
     }
 
-    public function index(): JsonResponse
+    /**
+     * Get all classes
+     * @param ListClassRequest $request
+     * @return JsonResponse
+     */
+    public function index(ListClassRequest $request): JsonResponse
     {
-        $classes = $this->classService->getAllClasses();
+        $value = $this->classService->getAllClasses($request->filters());
 
         return response()->json([
-            'data' => $classes
+            'data' => ManagementClassResource::collection($value->items()),
+            'meta' => [
+                'total' => $value->total(),
+                'per_page' => $value->perPage(),
+                'current_page' => $value->currentPage(),
+                'last_page' => $value->lastPage(),
+            ]
         ]);
     }
 
+    /**
+     * Get class by id
+     * @param FindClassByIdRequest $request
+     * @return JsonResponse
+     */
     public function show(FindClassByIdRequest $request): JsonResponse
     {
         $class = $this->classService->getClassById($request->id);
 
         return response()->json([
-            'data' => $class
+            'data' => new ManagementClassResource($class)
         ]);
     }
 
+    /**
+     * Create a new class
+     * @param CreateClassRequest $request
+     * @return JsonResponse
+     */
     public function store(CreateClassRequest $request): JsonResponse
     {
         $class = $this->classService->createClass($request->validated());
 
         return response()->json([
             'message' => 'Class created successfully.',
-            'data' => $class
+            'data' => new ManagementClassResource($class)
         ], Response::HTTP_CREATED);
     }
 
+    /**
+     * Update a class
+     * @param UpdateClassRequest $request
+     * @return JsonResponse
+     */
     public function update(UpdateClassRequest $request): JsonResponse
     {
         $class = $this->classService->updateClass(
@@ -55,7 +83,7 @@ class ClassManagementController extends Controller
 
         return response()->json([
             'message' => 'Class updated successfully.',
-            'data' => $class
+            'data' => new ManagementClassResource($class)
         ]);
     }
 }
