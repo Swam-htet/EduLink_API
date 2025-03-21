@@ -176,6 +176,22 @@ Route::prefix('management')->group(function () {
         // get all attendances by student id
         Route::get('/', [App\Http\Controllers\AttendanceManagementController::class, 'getAttendances']);
     });
+
+    // exam system api group
+    Route::prefix('exams')->group(function () {
+        // get all exams
+        // Route::get('/', [App\Http\Controllers\ExamManagementController::class, 'index']);
+
+        // get a exam
+        // Route::get('/{id}', [App\Http\Controllers\ExamManagementController::class, 'show']);
+
+        // create a exam
+        // Route::post('/', [App\Http\Controllers\ExamManagementController::class, 'store']);
+
+        // update a exam
+        // Route::put('/{id}', [App\Http\Controllers\ExamManagementController::class, 'update']);
+
+    });
 });
 
 // course api group
@@ -219,4 +235,18 @@ Route::prefix('attendances')->group(function () {
 
     // get all attendances by student id
     Route::get('/students/{student_id}', [App\Http\Controllers\AttendanceController::class, 'getAttendancesByStudentId']);
+});
+
+// exam system api group
+Route::prefix('exams')->group(function () {
+    // get all exams
+    // Route::get('classes/{class_id?}', [App\Http\Controllers\ExamController::class, 'index']);
+
+    // get a exam
+    // Route::get('{id}', [App\Http\Controllers\ExamController::class, 'show']);
+});
+
+// exam question api group
+Route::prefix('exam-questions')->group(function () {
+
 });

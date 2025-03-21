@@ -59,6 +59,16 @@ use App\Contracts\Repositories\AttendanceRepositoryInterface;
 use App\Repositories\AttendanceRepository;
 use App\Contracts\Services\AttendanceManagementServiceInterface;
 use App\Services\AttendanceManagementService;
+use App\Contracts\Repositories\ExamRepositoryInterface;
+use App\Contracts\Repositories\ExamQuestionRepositoryInterface;
+use App\Contracts\Repositories\StudentExamResponseRepositoryInterface;
+use App\Contracts\Repositories\ExamResultRepositoryInterface;
+use App\Repositories\ExamRepository;
+use App\Repositories\ExamQuestionRepository;
+use App\Repositories\StudentExamResponseRepository;
+use App\Repositories\ExamResultRepository;
+use App\Contracts\Repositories\ExamSectionRepositoryInterface;
+use App\Repositories\ExamSectionRepository;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -134,9 +144,18 @@ class AppServiceProvider extends ServiceProvider
 
         $this->app->bind(AttendanceManagementServiceInterface::class, AttendanceManagementService::class);
 
+        // Exam System Repositories
+        $this->app->bind(ExamRepositoryInterface::class, ExamRepository::class);
+
+        $this->app->bind(ExamQuestionRepositoryInterface::class, ExamQuestionRepository::class);
+
+        $this->app->bind(StudentExamResponseRepositoryInterface::class, StudentExamResponseRepository::class);
+
+        $this->app->bind(ExamResultRepositoryInterface::class, ExamResultRepository::class);
+
+        // Exam Section Repository
+        $this->app->bind(ExamSectionRepositoryInterface::class, ExamSectionRepository::class);
     }
-
-
 
     public function boot(): void
     {
