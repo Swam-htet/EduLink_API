@@ -20,7 +20,7 @@ return new class extends Migration
             $table->timestamp('start_date');
             $table->boolean('allow_blank_answers')->default(true);
             $table->timestamp('end_date');
-            $table->enum('status', ['published', 'ongoing', 'completed', 'cancelled'])->default('published');
+            $table->enum('status', ['draft', 'published', 'confirmed', 'completed', 'cancelled'])->default('draft');
             $table->timestamps();
             $table->softDeletes();
         });

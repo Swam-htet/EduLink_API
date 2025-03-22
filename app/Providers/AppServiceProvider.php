@@ -69,6 +69,8 @@ use App\Repositories\StudentExamResponseRepository;
 use App\Repositories\ExamResultRepository;
 use App\Contracts\Repositories\ExamSectionRepositoryInterface;
 use App\Repositories\ExamSectionRepository;
+use App\Contracts\Services\ExamManagementServiceInterface;
+use App\Services\ExamManagementService;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -155,6 +157,8 @@ class AppServiceProvider extends ServiceProvider
 
         // Exam Section Repository
         $this->app->bind(ExamSectionRepositoryInterface::class, ExamSectionRepository::class);
+
+        $this->app->bind(ExamManagementServiceInterface::class, ExamManagementService::class);
     }
 
     public function boot(): void

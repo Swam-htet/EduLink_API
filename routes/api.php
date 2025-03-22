@@ -180,16 +180,19 @@ Route::prefix('management')->group(function () {
     // exam system api group
     Route::prefix('exams')->group(function () {
         // get all exams
-        // Route::get('/', [App\Http\Controllers\ExamManagementController::class, 'index']);
+        Route::get('/', [App\Http\Controllers\ExamManagementController::class, 'index']);
 
         // get a exam
-        // Route::get('/{id}', [App\Http\Controllers\ExamManagementController::class, 'show']);
+        Route::get('/{id}', [App\Http\Controllers\ExamManagementController::class, 'show']);
 
         // create a exam
-        // Route::post('/', [App\Http\Controllers\ExamManagementController::class, 'store']);
+        Route::post('/', [App\Http\Controllers\ExamManagementController::class, 'store']);
 
         // update a exam
-        // Route::put('/{id}', [App\Http\Controllers\ExamManagementController::class, 'update']);
+        Route::put('/{id}', [App\Http\Controllers\ExamManagementController::class, 'update']);
+
+        // upload exam questions
+        Route::post('/{exam_id}/upload-questions', [App\Http\Controllers\ExamManagementController::class, 'uploadQuestions']);
 
     });
 });
@@ -240,13 +243,9 @@ Route::prefix('attendances')->group(function () {
 // exam system api group
 Route::prefix('exams')->group(function () {
     // get all exams
-    // Route::get('classes/{class_id?}', [App\Http\Controllers\ExamController::class, 'index']);
+    Route::get('classes/{class_id?}', [App\Http\Controllers\ExamController::class, 'index']);
 
     // get a exam
-    // Route::get('{id}', [App\Http\Controllers\ExamController::class, 'show']);
-});
-
-// exam question api group
-Route::prefix('exam-questions')->group(function () {
+    Route::get('{id}', [App\Http\Controllers\ExamController::class, 'show']);
 
 });
