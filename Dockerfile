@@ -38,3 +38,6 @@ RUN composer install
 
 # Set permissions
 RUN chown -R www-data:www-data /var/www/storage /var/www/bootstrap/cache
+
+# Add this command at the end of your Dockerfile
+CMD php artisan serve --host=0.0.0.0 --port=8000

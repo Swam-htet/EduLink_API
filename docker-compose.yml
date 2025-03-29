@@ -8,6 +8,8 @@ services:
         container_name: edulink_api
         restart: unless-stopped
         working_dir: /var/www/
+        ports:
+            - "8000:8000"
         volumes:
             - .:/var/www
         networks:
@@ -17,19 +19,19 @@ services:
             - redis
             - minio
 
-    nginx:
-        image: nginx:alpine
-        container_name: edulink_nginx
-        restart: unless-stopped
-        ports:
-            - "8000:80"
-        volumes:
-            - .:/var/www
-            - ./nginx/conf.d/:/etc/nginx/conf.d/
-        networks:
-            - app-network
-        depends_on:
-            - api
+    # nginx:
+    #     image: nginx:alpine
+    #     container_name: edulink_nginx
+    #     restart: unless-stopped
+    #     ports:
+    #         - "8000:80"
+    #     volumes:
+    #         - .:/var/www
+    #         - ./nginx/conf.d/:/etc/nginx/conf.d/
+    #     networks:
+    #         - app-network
+    #     depends_on:
+    #         - api
 
     db:
         image: mysql:8.0

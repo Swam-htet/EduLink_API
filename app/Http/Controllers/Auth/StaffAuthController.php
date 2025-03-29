@@ -9,6 +9,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
 use Illuminate\Http\Request;
 use App\Http\Resources\StaffResource;
+use Carbon\Carbon;
 
 class StaffAuthController extends Controller
 {
@@ -32,8 +33,10 @@ class StaffAuthController extends Controller
         $result = $this->staffAuthService->login($credentials);
 
         return response()->json([
+
             'message' => 'Login successful',
-            'data' => $result
+            'data' => $result,
+            'timestamp' => Carbon::now()->format('Y-m-d H:i:s')
         ], Response::HTTP_OK);
     }
 

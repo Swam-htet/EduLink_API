@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Middleware\TenantMiddleware;
+use App\Http\Middleware\CustomAuthenticate;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Application;
@@ -14,6 +15,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Http\Response;
+use Carbon\Carbon;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -23,14 +25,14 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware) {
+
         // Register TenantMiddleware as a global middleware to ensure it runs first
         $middleware->append(TenantMiddleware::class);
 
-        // Configure auth middleware with 'api' guard for staff
-        // $middleware->api('auth:staff');
-
         // Also apply tenant middleware to specific routes if needed
         $middleware->web(TenantMiddleware::class);
+
+
     })
     ->withExceptions(function (Exceptions $exceptions) {
 
@@ -43,6 +45,7 @@ return Application::configure(basePath: dirname(__DIR__))
                 // AuthenticationException
                 if ($e instanceof AuthenticationException) {
                     return response()->json([
+                        'timestamp' => Carbon::now()->format('Y-m-d H:i:s'),
                         'message' => 'Unauthenticated.',
                     ], Response::HTTP_UNAUTHORIZED);
                 }
@@ -50,6 +53,7 @@ return Application::configure(basePath: dirname(__DIR__))
                 // Validation exceptions
                 if ($e instanceof ValidationException) {
                     return response()->json([
+                        'timestamp' => Carbon::now()->format('Y-m-d H:i:s'),
                         'message' => 'The given data was invalid.',
                         'errors' => $e->errors(),
                     ], Response::HTTP_UNPROCESSABLE_ENTITY);
@@ -58,6 +62,7 @@ return Application::configure(basePath: dirname(__DIR__))
                 // Authorization exceptions
                 if ($e instanceof AuthorizationException) {
                     return response()->json([
+                        'timestamp' => Carbon::now()->format('Y-m-d H:i:s'),
                         'message' => 'This action is unauthorized.',
                     ], Response::HTTP_FORBIDDEN);
                 }
@@ -66,6 +71,7 @@ return Application::configure(basePath: dirname(__DIR__))
                 if ($e instanceof ModelNotFoundException) {
                     $modelName = strtolower(class_basename($e->getModel()));
                     return response()->json([
+                        'timestamp' => Carbon::now()->format('Y-m-d H:i:s'),
                         'message' => "Unable to find the requested {$modelName}.",
                     ], Response::HTTP_NOT_FOUND);
                 }
@@ -73,6 +79,7 @@ return Application::configure(basePath: dirname(__DIR__))
                 // Route not found exceptions
                 if ($e instanceof NotFoundHttpException) {
                     return response()->json([
+                        'timestamp' => Carbon::now()->format('Y-m-d H:i:s'),
                         'message' => 'The requested resource was not found.',
                     ], Response::HTTP_NOT_FOUND);
                 }
@@ -80,6 +87,7 @@ return Application::configure(basePath: dirname(__DIR__))
                 // Method not allowed exceptions
                 if ($e instanceof MethodNotAllowedHttpException) {
                     return response()->json([
+                        'timestamp' => Carbon::now()->format('Y-m-d H:i:s'),
                         'message' => 'The requested method is not allowed for this endpoint.',
                     ], Response::HTTP_METHOD_NOT_ALLOWED);
                 }
@@ -89,6 +97,7 @@ return Application::configure(basePath: dirname(__DIR__))
                     // Check for foreign key constraint failures
                     if (str_contains($e->getMessage(), 'Foreign key constraint')) {
                         return response()->json([
+                            'timestamp' => Carbon::now()->format('Y-m-d H:i:s'),
                             'message' => 'Data integrity constraint violation.',
                         ], Response::HTTP_CONFLICT);
                     }
@@ -96,12 +105,14 @@ return Application::configure(basePath: dirname(__DIR__))
                     // Check for unique constraint violations
                     if (str_contains($e->getMessage(), 'Duplicate entry') || $e->getCode() === '23000') {
                         return response()->json([
+                            'timestamp' => Carbon::now()->format('Y-m-d H:i:s'),
                             'message' => 'The record already exists.',
                         ], Response::HTTP_CONFLICT);
                     }
 
                     // Generic database error (don't expose details in production)
                     return response()->json([
+                        'timestamp' => Carbon::now()->format('Y-m-d H:i:s'),
                         'message' => 'Database error occurred.',
                     ], Response::HTTP_INTERNAL_SERVER_ERROR);
                 }
@@ -109,11 +120,13 @@ return Application::configure(basePath: dirname(__DIR__))
                 // HTTP exceptions
                 if ($e instanceof HttpException) {
                     return response()->json([
+                        'timestamp' => Carbon::now()->format('Y-m-d H:i:s'),
                         'message' => $e->getMessage() ?: 'HTTP error occurred.',
                     ], $e->getStatusCode());
                 }
 
                 return response()->json([
+                    'timestamp' => Carbon::now()->format('Y-m-d H:i:s'),
                     'message' => $e->getMessage() ?: 'An unexpected error occurred.',
                 ], Response::HTTP_INTERNAL_SERVER_ERROR);
             }

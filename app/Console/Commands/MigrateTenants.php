@@ -92,7 +92,7 @@ class MigrateTenants extends Command
             'port' => 3306,
             'database' => 'mysql',
             'username' => 'root',
-            'password' => env('DB_ROOT_PASSWORD'),
+            'password' => env('DB_ROOT_PASSWORD', 'root_password'),
             'charset' => 'utf8mb4',
             'collation' => 'utf8mb4_unicode_ci',
         ];
