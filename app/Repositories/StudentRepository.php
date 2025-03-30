@@ -76,7 +76,7 @@ class StudentRepository implements StudentRepositoryInterface
             $query->orderBy($filters['sort_by'], $filters['sort_direction'] ?? 'asc');
         }
 
-        return $query->paginate($filters['per_page'] ?? 10);
+        return $query->paginate($filters['per_page'] ?? 10, ['*'], 'page', $filters['current_page'] ?? 1);
     }
 
     /**
@@ -162,4 +162,6 @@ class StudentRepository implements StudentRepositoryInterface
         $count = $this->model->count() + 1;
         return $prefix . $year . str_pad($count, 4, '0', STR_PAD_LEFT);
     }
+
+
 }

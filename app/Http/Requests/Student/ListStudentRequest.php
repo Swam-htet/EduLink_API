@@ -52,6 +52,7 @@ class ListStudentRequest extends FormRequest
                 'updated_at'
             ])],
             'sort_direction' => ['sometimes', 'string', Rule::in(['asc', 'desc'])],
+            'current_page' => 'sometimes|integer|min:1',
         ];
     }
 
@@ -60,7 +61,8 @@ class ListStudentRequest extends FormRequest
         return [
             'per_page' => 15,
             'sort_by' => 'created_at',
-            'sort_direction' => 'desc'
+            'sort_direction' => 'desc',
+            'current_page' => 1
         ];
     }
 

@@ -102,4 +102,9 @@ class StudentManagementService implements StudentManagementServiceInterface
     {
         return $this->studentRepository->getPaginatedStudents($filters);
     }
+
+    public function getStudentById(int $id): Student
+    {
+        return $this->studentRepository->findById($id);
+    }
 }

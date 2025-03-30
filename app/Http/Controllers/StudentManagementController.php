@@ -8,6 +8,8 @@ use App\Contracts\Services\StudentManagementServiceInterface;
 use Illuminate\Http\JsonResponse;
 use App\Http\Resources\Management\ManagementStudentResource;
 use App\Http\Requests\Student\ListStudentRequest;
+use Carbon\Carbon;
+
 class StudentManagementController extends Controller
 {
     protected $managementService;
@@ -34,7 +36,8 @@ class StudentManagementController extends Controller
                 'per_page' => $value->perPage(),
                 'current_page' => $value->currentPage(),
                 'last_page' => $value->lastPage(),
-            ]
+            ],
+            'timestamp' => Carbon::now()->format('Y-m-d H:i:s')
         ]);
     }
 
@@ -50,7 +53,8 @@ class StudentManagementController extends Controller
 
         return response()->json([
             'message' => 'Student registration approved successfully.',
-            'data' => new ManagementStudentResource($student)
+            'data' => new ManagementStudentResource($student),
+            'timestamp' => Carbon::now()->format('Y-m-d H:i:s')
         ]);
 
     }
@@ -67,8 +71,26 @@ class StudentManagementController extends Controller
 
         return response()->json([
             'message' => 'Student registration rejected successfully.',
-            'data' => new ManagementStudentResource($student)
+            'data' => new ManagementStudentResource($student),
+            'timestamp' => Carbon::now()->format('Y-m-d H:i:s')
         ]);
 
     }
+
+    /**
+     * Get a student
+     *
+     * @param int $id
+     * @return JsonResponse
+     */
+    public function show(int $id): JsonResponse
+    {
+        $student = $this->managementService->getStudentById($id);
+
+        return response()->json([
+            'data' => new ManagementStudentResource($student),
+            'timestamp' => Carbon::now()->format('Y-m-d H:i:s')
+        ]);
+    }
+
 }

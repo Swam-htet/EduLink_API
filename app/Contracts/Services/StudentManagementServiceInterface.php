@@ -29,4 +29,12 @@ interface StudentManagementServiceInterface
      * @return LengthAwarePaginator
      */
     public function getAllStudents(array $filters): LengthAwarePaginator;
+
+    /**
+     * Get a student by id
+     *
+     * @param int $id
+     * @return Student
+     */
+    public function getStudentById(int $id): Student;
 }

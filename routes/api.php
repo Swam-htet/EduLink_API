@@ -63,11 +63,16 @@ Route::prefix('management')->group(function () {
         // get all students for management
         Route::get('/', [App\Http\Controllers\StudentManagementController::class, 'index']);
 
+        // get a student for management
+        Route::get('/{id}', [App\Http\Controllers\StudentManagementController::class, 'show']);
+
         // approve student registration for management
         Route::post('/approve-registration', [App\Http\Controllers\StudentManagementController::class, 'approveRegistration']);
 
         // reject student registration for management
         Route::post('/reject-registration', [App\Http\Controllers\StudentManagementController::class, 'rejectRegistration']);
+
+
     });
 
 
