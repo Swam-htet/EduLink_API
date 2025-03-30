@@ -11,7 +11,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
 use App\Http\Requests\Course\ListCourseRequest;
 use App\Http\Resources\Management\ManagementCourseResource;
-
+use Carbon\Carbon;
 class CourseManagementController extends Controller
 {
     protected $courseService;
@@ -32,7 +32,8 @@ class CourseManagementController extends Controller
         $courses = $this->courseService->getAllCourses($request->filters());
 
         return response()->json([
-            'data' => ManagementCourseResource::collection($courses)
+            'data' => ManagementCourseResource::collection($courses),
+            'timestamp' => Carbon::now()->format('Y-m-d H:i:s')
         ]);
     }
 
@@ -47,7 +48,8 @@ class CourseManagementController extends Controller
         $course = $this->courseService->getCourseById($request->id);
 
         return response()->json([
-            'data' => new ManagementCourseResource($course)
+            'data' => new ManagementCourseResource($course),
+            'timestamp' => Carbon::now()->format('Y-m-d H:i:s')
         ]);
     }
 
@@ -63,7 +65,8 @@ class CourseManagementController extends Controller
 
         return response()->json([
             'message' => 'Course created successfully.',
-            'data' => new ManagementCourseResource($course)
+            'data' => new ManagementCourseResource($course),
+            'timestamp' => Carbon::now()->format('Y-m-d H:i:s')
         ], Response::HTTP_CREATED);
     }
 
@@ -79,7 +82,8 @@ class CourseManagementController extends Controller
 
         return response()->json([
             'message' => 'Course updated successfully.',
-            'data' => new ManagementCourseResource($course)
+            'data' => new ManagementCourseResource($course),
+            'timestamp' => Carbon::now()->format('Y-m-d H:i:s')
         ], Response::HTTP_OK);
     }
 
@@ -94,7 +98,8 @@ class CourseManagementController extends Controller
         $this->courseService->deleteCourse($request->id);
 
         return response()->json([
-            'message' => 'Course deleted successfully.'
+            'message' => 'Course deleted successfully.',
+            'timestamp' => Carbon::now()->format('Y-m-d H:i:s')
         ], Response::HTTP_OK);
     }
 }

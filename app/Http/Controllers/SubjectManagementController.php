@@ -10,6 +10,8 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
 use App\Http\Requests\Subject\ListSubjectRequest;
 use App\Http\Resources\Management\ManagementSubjectResource;
+use Carbon\Carbon;
+
 class SubjectManagementController extends Controller
 {
     protected $subjectService;
@@ -31,7 +33,8 @@ class SubjectManagementController extends Controller
         $subjects = $this->subjectService->getAllSubjects($request->filters());
 
         return response()->json([
-            'data' => ManagementSubjectResource::collection($subjects)
+            'data' => ManagementSubjectResource::collection($subjects),
+            'timestamp' => Carbon::now()->format('Y-m-d H:i:s')
         ]);
     }
 
@@ -46,7 +49,8 @@ class SubjectManagementController extends Controller
         $subject = $this->subjectService->getSubjectById($request->id);
 
         return response()->json([
-            'data' => new ManagementSubjectResource($subject)
+            'data' => new ManagementSubjectResource($subject),
+            'timestamp' => Carbon::now()->format('Y-m-d H:i:s')
         ]);
     }
 
@@ -62,7 +66,8 @@ class SubjectManagementController extends Controller
 
         return response()->json([
             'message' => 'Subject created successfully.',
-            'data' => new ManagementSubjectResource($subject)
+            'data' => new ManagementSubjectResource($subject),
+            'timestamp' => Carbon::now()->format('Y-m-d H:i:s')
         ], Response::HTTP_CREATED);
     }
 
@@ -81,7 +86,8 @@ class SubjectManagementController extends Controller
 
         return response()->json([
             'message' => 'Subject updated successfully.',
-            'data' => new ManagementSubjectResource($subject)
+            'data' => new ManagementSubjectResource($subject),
+            'timestamp' => Carbon::now()->format('Y-m-d H:i:s')
         ]);
     }
 }
