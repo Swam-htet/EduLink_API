@@ -8,7 +8,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
 use App\Http\Requests\Staff\ListStaffRequest;
 use App\Http\Resources\Management\ManagementStaffResource;
-
+use Carbon\Carbon;
 class StaffManagementController extends Controller
 {
     protected $staffManagementService;
@@ -33,7 +33,8 @@ class StaffManagementController extends Controller
                 'per_page' => $value->perPage(),
                 'current_page' => $value->currentPage(),
                 'last_page' => $value->lastPage(),
-            ]
+            ],
+            'timestamp' => Carbon::now()->format('Y-m-d H:i:s')
         ]);
     }
 
@@ -46,7 +47,8 @@ class StaffManagementController extends Controller
     {
         $staff = $this->staffManagementService->getStaffById($id);
         return response()->json([
-            'data' => new ManagementStaffResource($staff)
+            'data' => new ManagementStaffResource($staff),
+            'timestamp' => Carbon::now()->format('Y-m-d H:i:s')
         ]);
     }
 
@@ -61,7 +63,8 @@ class StaffManagementController extends Controller
         $staff = $this->staffManagementService->createStaff($request->validated());
         return response()->json([
             'message' => 'Staff created successfully',
-            'data' => new ManagementStaffResource($staff)
+            'data' => new ManagementStaffResource($staff),
+            'timestamp' => Carbon::now()->format('Y-m-d H:i:s')
         ], Response::HTTP_CREATED);
     }
 }

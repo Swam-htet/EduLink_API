@@ -26,11 +26,11 @@ Route::prefix('auth')->group(function () {
     });
 
     Route::group(['prefix' => 'staff'], function () {
-        // login for staff
+        // login for staff - done
         Route::post('/login', [App\Http\Controllers\Auth\StaffAuthController::class, 'login']);
 
         Route::group(['middleware' => 'auth:staff'], function () {
-            // logout for staff
+            // logout for staff - done
             Route::post('/logout', [App\Http\Controllers\Auth\StaffAuthController::class, 'logout']);
 
             // get staff profile

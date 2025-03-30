@@ -37,6 +37,7 @@ class ListStaffRequest extends FormRequest
 
             // Pagination and Sorting
             'per_page' => 'sometimes|integer|min:1|max:100',
+            'current_page' => 'sometimes|integer|min:1',
             'sort_by' => ['sometimes', 'string', Rule::in([
                 'name',
                 'email',

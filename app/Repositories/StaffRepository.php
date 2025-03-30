@@ -68,7 +68,7 @@ class StaffRepository implements StaffRepositoryInterface
             $query->orderBy($filters['sort_by'], $filters['sort_direction']);
         }
 
-        return $query->paginate($filters['per_page']);
+        return $query->paginate($filters['per_page'], ['*'], 'page', $filters['current_page'] ?? 1);
     }
 
     /**
