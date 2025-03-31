@@ -10,6 +10,8 @@ use App\Http\Requests\Enrollment\ListEnrollmentsRequest;
 use App\Http\Requests\Enrollment\UpdateEnrollmentRequest;
 use App\Http\Resources\Management\ManagementEnrollmentResource;
 use App\Http\Requests\Enrollment\ManualEnrollmentEmailRequest;
+use Carbon\Carbon;
+
 class ClassEnrollmentManagementController extends Controller
 {
     protected $enrollmentService;
@@ -29,15 +31,14 @@ class ClassEnrollmentManagementController extends Controller
     {
         $values = $this->enrollmentService->getPaginatedEnrollments($request->all());
         return response()->json([
-            'data' => [
-                'enrollments' => ManagementEnrollmentResource::collection($values->items()),
-                'meta' => [
-                    'total' => $values->total(),
-                    'per_page' => $values->perPage(),
-                    'current_page' => $values->currentPage(),
-                    'last_page' => $values->lastPage(),
-                ]
-            ]
+            'data' => ManagementEnrollmentResource::collection($values->items()),
+            'meta' => [
+                'total' => $values->total(),
+                'per_page' => $values->perPage(),
+                'current_page' => $values->currentPage(),
+                'last_page' => $values->lastPage(),
+            ],
+            'timestamp' => Carbon::now()->format('Y-m-d H:i:s')
         ], Response::HTTP_OK);
     }
 
@@ -50,11 +51,11 @@ class ClassEnrollmentManagementController extends Controller
      */
     public function enrollStudents(EnrollStudentRequest $request): JsonResponse
     {
-        $enrollments = $this->enrollmentService->enrollStudents($request->validated());
+        $this->enrollmentService->enrollStudents($request->validated());
 
         return response()->json([
             'message' => 'Students enrolled successfully.',
-            'data' => ManagementEnrollmentResource::collection($enrollments)
+            'timestamp' => Carbon::now()->format('Y-m-d H:i:s')
         ], Response::HTTP_CREATED);
     }
 
@@ -66,11 +67,11 @@ class ClassEnrollmentManagementController extends Controller
      */
     public function update(UpdateEnrollmentRequest $request): JsonResponse
     {
-        $enrollment = $this->enrollmentService->update($request->validated());
+        $this->enrollmentService->update($request->validated());
 
         return response()->json([
             'message' => 'Enrollment updated successfully.',
-            'data' => new ManagementEnrollmentResource($enrollment)
+            'timestamp' => Carbon::now()->format('Y-m-d H:i:s')
         ], Response::HTTP_OK);
     }
 
@@ -85,7 +86,8 @@ class ClassEnrollmentManagementController extends Controller
         $this->enrollmentService->sendManualEnrollmentEmail($request->validated());
 
         return response()->json([
-            'message' => 'Enrollment email sent successfully.'
+            'message' => 'Enrollment email sent successfully.',
+            'timestamp' => Carbon::now()->format('Y-m-d H:i:s')
         ], Response::HTTP_OK);
     }
 }

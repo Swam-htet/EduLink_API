@@ -90,7 +90,7 @@ class StudentClassEnrollmentRepository implements StudentClassEnrollmentReposito
         $sortDirection = $filters['sort_direction'] ?? 'desc';
         $query->orderBy($sortBy, $sortDirection);
 
-        return $query->paginate($filters['per_page'] ?? 15);
+        return $query->paginate($filters['per_page'] ?? 15, ['*'], 'page', $filters['current_page'] ?? 1);
     }
 
     /**
