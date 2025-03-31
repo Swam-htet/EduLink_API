@@ -7,6 +7,7 @@ use App\Contracts\Repositories\ClassRepositoryInterface;
 use App\Models\Tenants\Classes;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Validation\ValidationException;
+use Illuminate\Support\Collection;
 
 class ClassManagementService implements ClassManagementServiceInterface
 {
@@ -25,6 +26,15 @@ class ClassManagementService implements ClassManagementServiceInterface
     public function getAllClasses(array $filters): LengthAwarePaginator
     {
         return $this->classRepository->getAll($filters);
+    }
+
+    /**
+     * Get all ongoing classes
+     * @return Collection
+     */
+    public function getOngoingClasses(): Collection
+    {
+        return $this->classRepository->getOngoingClasses();
     }
 
     /**

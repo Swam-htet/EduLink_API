@@ -48,13 +48,13 @@ class ClassEnrollmentManagementController extends Controller
      * @param EnrollStudentRequest $request
      * @return JsonResponse
      */
-    public function enrollStudent(EnrollStudentRequest $request): JsonResponse
+    public function enrollStudents(EnrollStudentRequest $request): JsonResponse
     {
-        $enrollment = $this->enrollmentService->enrollStudent($request->validated());
+        $enrollments = $this->enrollmentService->enrollStudents($request->validated());
 
         return response()->json([
-            'message' => 'Student enrolled successfully.',
-            'data' => new ManagementEnrollmentResource($enrollment)
+            'message' => 'Students enrolled successfully.',
+            'data' => ManagementEnrollmentResource::collection($enrollments)
         ], Response::HTTP_CREATED);
     }
 

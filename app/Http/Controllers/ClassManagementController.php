@@ -10,7 +10,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
 use App\Http\Requests\Class\ListClassRequest;
 use App\Http\Resources\Management\ManagementClassResource;
-
+use Carbon\Carbon;
 class ClassManagementController extends Controller
 {
     protected $classService;
@@ -36,9 +36,25 @@ class ClassManagementController extends Controller
                 'per_page' => $value->perPage(),
                 'current_page' => $value->currentPage(),
                 'last_page' => $value->lastPage(),
-            ]
+            ],
+            'timestamp' => Carbon::now()->format('Y-m-d H:i:s')
         ]);
     }
+
+    /**
+     * Get all ongoing classes
+     * @return JsonResponse
+     */
+    public function ongoingClasses(): JsonResponse
+    {
+        $value = $this->classService->getOngoingClasses();
+
+        return response()->json([
+            'data' => ManagementClassResource::collection($value),
+            'timestamp' => Carbon::now()->format('Y-m-d H:i:s')
+        ]);
+    }
+
 
     /**
      * Get class by id
@@ -50,7 +66,8 @@ class ClassManagementController extends Controller
         $class = $this->classService->getClassById($request->id);
 
         return response()->json([
-            'data' => new ManagementClassResource($class)
+            'data' => new ManagementClassResource($class),
+            'timestamp' => Carbon::now()->format('Y-m-d H:i:s')
         ]);
     }
 
@@ -65,7 +82,8 @@ class ClassManagementController extends Controller
 
         return response()->json([
             'message' => 'Class created successfully.',
-            'data' => new ManagementClassResource($class)
+            'data' => new ManagementClassResource($class),
+            'timestamp' => Carbon::now()->format('Y-m-d H:i:s')
         ], Response::HTTP_CREATED);
     }
 
@@ -83,7 +101,8 @@ class ClassManagementController extends Controller
 
         return response()->json([
             'message' => 'Class updated successfully.',
-            'data' => new ManagementClassResource($class)
+            'data' => new ManagementClassResource($class),
+            'timestamp' => Carbon::now()->format('Y-m-d H:i:s')
         ]);
     }
 }

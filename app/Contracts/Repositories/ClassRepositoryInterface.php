@@ -4,7 +4,7 @@ namespace App\Contracts\Repositories;
 
 use App\Models\Tenants\Classes;
 use Illuminate\Pagination\LengthAwarePaginator;
-
+use Illuminate\Support\Collection;
 interface ClassRepositoryInterface
 {
     /**
@@ -14,6 +14,13 @@ interface ClassRepositoryInterface
      * @return LengthAwarePaginator
      */
     public function getAll(array $filters): LengthAwarePaginator;
+
+    /**
+     * Get all ongoing classes
+     *
+     * @return Collection
+     */
+    public function getOngoingClasses(): Collection;
 
     /**
      * Find class by ID

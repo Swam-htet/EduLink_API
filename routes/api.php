@@ -133,6 +133,9 @@ Route::prefix('management')->group(function () {
         // get all classes for management
         Route::get('/', [App\Http\Controllers\ClassManagementController::class, 'index']);
 
+        // get all ongoing classes for management
+        Route::get('/ongoing', [App\Http\Controllers\ClassManagementController::class, 'ongoingClasses']);
+
         // get a class for management
         Route::get('/{id}', [App\Http\Controllers\ClassManagementController::class, 'show']);
 
@@ -152,7 +155,7 @@ Route::prefix('management')->group(function () {
         Route::put('/{id}', [App\Http\Controllers\ClassEnrollmentManagementController::class, 'update']);
 
         // enroll student to class
-        Route::post('/', [App\Http\Controllers\ClassEnrollmentManagementController::class, 'enrollStudent']);
+        Route::post('/', [App\Http\Controllers\ClassEnrollmentManagementController::class, 'enrollStudents']);
 
         // send manual enrollment email
         Route::post('/send-email', [App\Http\Controllers\ClassEnrollmentManagementController::class, 'sendManualEnrollmentEmail']);

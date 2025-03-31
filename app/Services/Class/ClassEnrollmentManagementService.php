@@ -11,6 +11,8 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Pagination\LengthAwarePaginator;
 use App\Helpers\TokenHelper;
+use Illuminate\Support\Collection;
+
 
 class ClassEnrollmentManagementService implements ClassEnrollmentManagementServiceInterface
 {
@@ -87,6 +89,33 @@ class ClassEnrollmentManagementService implements ClassEnrollmentManagementServi
 
             DB::commit();
             return $enrollment;
+        } catch (\Exception $e) {
+            DB::rollBack();
+            throw $e;
+        }
+    }
+
+    /**
+     * Enroll students to class
+     *
+     * @param array $data
+     * @return Collection
+     */
+    public function enrollStudents(array $data): Collection
+    {
+        DB::beginTransaction();
+        try {
+            $enrollments = [];
+
+        foreach ($data['student_ids'] as $studentId) {
+            $enrollments[] = $this->enrollStudent([
+                'student_id' => $studentId,
+                'class_id' => $data['class_id']
+            ]);
+        }
+
+            DB::commit();
+            return collect($enrollments);
         } catch (\Exception $e) {
             DB::rollBack();
             throw $e;

@@ -5,6 +5,7 @@ namespace App\Repositories;
 use App\Contracts\Repositories\ClassRepositoryInterface;
 use App\Models\Tenants\Classes;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Collection;
 
 class ClassRepository implements ClassRepositoryInterface
 {
@@ -61,6 +62,15 @@ class ClassRepository implements ClassRepositoryInterface
         }
 
         return $query->paginate($filters['per_page']);
+    }
+
+    /**
+     * Get all ongoing classes
+     * @return Collection
+     */
+    public function getOngoingClasses(): Collection
+    {
+        return $this->model->where('status', 'ongoing')->get();
     }
 
     /**
