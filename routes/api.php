@@ -126,6 +126,9 @@ Route::prefix('management')->group(function () {
 
         // update a subject by management
         Route::put('/{id}', [App\Http\Controllers\SubjectManagementController::class, 'update']);
+
+        // delete a subject by management
+        Route::delete('/{id}', [App\Http\Controllers\SubjectManagementController::class, 'destroy']);
     });
 
     // class api group

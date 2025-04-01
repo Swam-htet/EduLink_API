@@ -18,7 +18,6 @@ class Subject extends Model
         'code',
         'description',
         'credits',
-        'status',
     ];
 
     protected $casts = [

@@ -18,7 +18,6 @@ class ListSubjectRequest extends FormRequest
             'course_id' => 'sometimes|integer|exists:tenant.courses,id',
             'title' => 'sometimes|string|max:255',
             'code' => 'sometimes|string|max:50',
-            'status' => ['sometimes', 'string', Rule::in(['active', 'inactive'])],
             'credits' => 'sometimes|integer',
             'sort_by' => ['sometimes', 'string', Rule::in([
                 'title',

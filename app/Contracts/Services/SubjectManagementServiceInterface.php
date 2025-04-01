@@ -38,4 +38,12 @@ interface SubjectManagementServiceInterface
      * @return Subject
      */
     public function updateSubject(int $id, array $data): Subject;
+
+    /**
+     * Delete subject
+     *
+     * @param int $id
+     * @return void
+     */
+    public function deleteSubject(int $id): void;
 }

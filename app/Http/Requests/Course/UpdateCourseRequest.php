@@ -27,11 +27,9 @@ class UpdateCourseRequest extends FormRequest
                 'integer',
                 Rule::exists('tenant.courses', 'id')->whereNull('deleted_at'),
             ],
-            'name' => 'sometimes|required|string|max:255',
+            'title' => 'sometimes|required|string|max:255',
             'description' => 'sometimes|required|string',
             'duration' => 'sometimes|required|integer|min:1',
-            'duration_unit' => 'sometimes|required|string|in:hours,days,weeks,months',
-            'status' => 'sometimes|required|string|in:active,inactive',
         ];
     }
 }

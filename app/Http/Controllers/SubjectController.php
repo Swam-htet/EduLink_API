@@ -7,7 +7,7 @@ use App\Http\Requests\Subject\FindSubjectByIdRequest;
 use App\Http\Requests\Subject\ListSubjectRequest;
 use App\Http\Resources\SubjectResource;
 use Illuminate\Http\JsonResponse;
-
+use Carbon\Carbon;
 class SubjectController extends Controller
 {
     protected $subjectService;
@@ -24,10 +24,11 @@ class SubjectController extends Controller
      */
     public function index(ListSubjectRequest $request): JsonResponse
     {
-        $subjects = $this->subjectService->getAllActiveSubjects($request->filters());
+        $subjects = $this->subjectService->getAllSubjects($request->filters());
 
         return response()->json([
-            'data' => SubjectResource::collection($subjects)
+            'data' => SubjectResource::collection($subjects),
+            'timestamp' => Carbon::now()->format('Y-m-d H:i:s')
         ]);
     }
 
@@ -39,10 +40,11 @@ class SubjectController extends Controller
      */
     public function show(FindSubjectByIdRequest $request): JsonResponse
     {
-        $subject = $this->subjectService->getActiveSubjectById($request->id);
+        $subject = $this->subjectService->getSubjectById($request->id);
 
         return response()->json([
-            'data' => new SubjectResource($subject)
+            'data' => new SubjectResource($subject),
+            'timestamp' => Carbon::now()->format('Y-m-d H:i:s')
         ]);
     }
 }

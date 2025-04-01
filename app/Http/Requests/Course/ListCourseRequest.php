@@ -17,9 +17,8 @@ class ListCourseRequest extends FormRequest
         return [
             'title' => 'sometimes|string|max:255',
             'code' => 'sometimes|string|max:50',
-            'status' => ['sometimes', 'string', Rule::in(['active', 'inactive'])],
             'sort_by' => ['sometimes', 'string', Rule::in([
-                'name', 'code', 'created_at', 'updated_at'
+                'title', 'code', 'created_at', 'updated_at'
             ])],
             'sort_direction' => ['sometimes', 'string', Rule::in(['asc', 'desc'])],
         ];

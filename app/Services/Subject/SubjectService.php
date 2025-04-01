@@ -21,19 +21,19 @@ class SubjectService implements SubjectServiceInterface
      * Get all active subjects
      * @return Collection
      */
-    public function getAllActiveSubjects(array $filters): Collection
+    public function getAllSubjects(array $filters): Collection
     {
-        return $this->subjectRepository->getAllActive($filters);
+        return $this->subjectRepository->getAll($filters);
     }
 
     /**
-     * Get active subject by id
+     * Get subject by id
      * @param int $id
      * @return Subject|null
      */
-    public function getActiveSubjectById(int $id): Subject
+    public function getSubjectById(int $id): Subject
     {
-        $subject = $this->subjectRepository->findActiveById($id);
+        $subject = $this->subjectRepository->findById($id);
 
         if (!$subject) {
             throw ValidationException::withMessages([

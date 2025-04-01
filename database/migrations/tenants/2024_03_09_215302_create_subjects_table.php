@@ -15,7 +15,6 @@ return new class extends Migration
             $table->string('code')->unique();
             $table->text('description')->nullable();
             $table->integer('credits')->default(0);
-            $table->enum('status', ['active', 'inactive'])->default('active');
             $table->timestamps();
             $table->softDeletes();
         });

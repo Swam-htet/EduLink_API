@@ -10,7 +10,7 @@ use App\Http\Requests\Exam\UploadExamQuestionRequest;
 use App\Http\Resources\Management\ManagementExamResource;
 use Illuminate\Http\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
-
+use Carbon\Carbon;
 class ExamManagementController extends Controller
 {
     protected $examManagementService;
@@ -31,17 +31,18 @@ class ExamManagementController extends Controller
                 'per_page' => $exams->perPage(),
                 'current_page' => $exams->currentPage(),
                 'last_page' => $exams->lastPage(),
-            ]
+            ],
+            'timestamp' => Carbon::now()->format('Y-m-d H:i:s')
         ], Response::HTTP_OK);
     }
 
     public function store(CreateExamRequest $request): JsonResponse
     {
-        $exam = $this->examManagementService->createExam($request->validated());
+        $this->examManagementService->createExam($request->validated());
 
         return response()->json([
             'message' => 'Exam created successfully',
-            'data' => new ManagementExamResource($exam)
+            'timestamp' => Carbon::now()->format('Y-m-d H:i:s')
         ], Response::HTTP_CREATED);
     }
 
@@ -50,30 +51,31 @@ class ExamManagementController extends Controller
         $exam = $this->examManagementService->findExamById((int) $id);
 
         return response()->json([
-            'data' => new ManagementExamResource($exam)
+            'data' => new ManagementExamResource($exam),
+            'timestamp' => Carbon::now()->format('Y-m-d H:i:s')
         ], Response::HTTP_OK);
     }
 
     public function update(UpdateExamRequest $request, string $id): JsonResponse
     {
-        $exam = $this->examManagementService->updateExam((int) $id, $request->validated());
+        $this->examManagementService->updateExam((int) $id, $request->validated());
 
         return response()->json([
             'message' => 'Exam updated successfully',
-            'data' => new ManagementExamResource($exam)
+            'timestamp' => Carbon::now()->format('Y-m-d H:i:s')
         ], Response::HTTP_OK);
     }
 
     public function uploadQuestions(UploadExamQuestionRequest $request): JsonResponse
     {
-        $exam = $this->examManagementService->uploadQuestions(
+        $this->examManagementService->uploadQuestions(
             (int) $request->exam_id,
             $request->validated()
         );
 
         return response()->json([
             'message' => 'Questions uploaded successfully',
-            'data' => new ManagementExamResource($exam)
+            'timestamp' => Carbon::now()->format('Y-m-d H:i:s')
         ], Response::HTTP_OK);
     }
 }

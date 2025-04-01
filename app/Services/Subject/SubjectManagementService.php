@@ -55,4 +55,14 @@ class SubjectManagementService implements SubjectManagementServiceInterface
     {
         return $this->subjectRepository->update($id, $data);
     }
+
+    /**
+     * Delete a subject
+     * @param int $id
+     * @return void
+     */
+    public function deleteSubject(int $id): void
+    {
+        $this->subjectRepository->delete($id);
+    }
 }

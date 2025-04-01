@@ -39,18 +39,12 @@ interface SubjectRepositoryInterface
      */
     public function update(int $id, array $data): Subject;
 
-    /**
-     * Get all active subjects
-     *
-     * @return Collection
-     */
-    public function getAllActive(array $filters): Collection;
 
     /**
-     * Find active subject by ID
+     * Delete subject
      *
      * @param int $id
-     * @return Subject|null
+     * @return void
      */
-    public function findActiveById(int $id): ?Subject;
+    public function delete(int $id): void;
 }

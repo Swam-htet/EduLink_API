@@ -66,7 +66,6 @@ class SubjectManagementController extends Controller
 
         return response()->json([
             'message' => 'Subject created successfully.',
-            'data' => new ManagementSubjectResource($subject),
             'timestamp' => Carbon::now()->format('Y-m-d H:i:s')
         ], Response::HTTP_CREATED);
     }
@@ -79,14 +78,29 @@ class SubjectManagementController extends Controller
      */
     public function update(UpdateSubjectRequest $request): JsonResponse
     {
-        $subject = $this->subjectService->updateSubject(
+        $this->subjectService->updateSubject(
             $request->id,
             $request->validated()
         );
 
         return response()->json([
             'message' => 'Subject updated successfully.',
-            'data' => new ManagementSubjectResource($subject),
+            'timestamp' => Carbon::now()->format('Y-m-d H:i:s')
+        ]);
+    }
+
+    /**
+     * Delete a subject
+     *
+     * @param FindSubjectByIdRequest $request
+     * @return JsonResponse
+     */
+    public function destroy(FindSubjectByIdRequest $request): JsonResponse
+    {
+        $this->subjectService->deleteSubject($request->id);
+
+        return response()->json([
+            'message' => 'Subject deleted successfully.',
             'timestamp' => Carbon::now()->format('Y-m-d H:i:s')
         ]);
     }
