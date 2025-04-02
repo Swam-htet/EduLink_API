@@ -61,7 +61,7 @@ class StudentRepository implements StudentRepositoryInterface
         }
 
         if (isset($filters['enrollment_date'])) {
-            $query->whereBetween('enrollment_date', [$filters['enrollment_date']['start'], $filters['enrollment_date']['end']]);
+            $query->whereBetween('created_at', [$filters['enrollment_date']['start'], $filters['enrollment_date']['end']]);
         }
 
         if (isset($filters['guardian_name'])) {

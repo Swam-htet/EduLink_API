@@ -18,7 +18,7 @@ class ListClassRequest extends FormRequest
             // Basic Filters
             'name' => 'sometimes|string|max:255',
             'code' => 'sometimes|string|max:50',
-            'status' => ['sometimes', 'string', Rule::in(['active', 'inactive'])],
+            'status' => ['sometimes', 'string', Rule::in(['scheduled', 'ongoing', 'completed', 'cancelled'])],
 
             // Relationship Filters
             'course_id' => 'sometimes|integer|exists:tenant.courses,id',
@@ -39,6 +39,7 @@ class ListClassRequest extends FormRequest
 
             // Pagination and Sorting
             'per_page' => 'sometimes|integer|min:1|max:100',
+            'current_page' => 'sometimes|integer|min:1',
             'sort_by' => ['sometimes', 'string', Rule::in([
                 'name',
                 'code',
@@ -60,7 +61,8 @@ class ListClassRequest extends FormRequest
         return [
             'per_page' => 15,
             'sort_by' => 'created_at',
-            'sort_direction' => 'desc'
+            'sort_direction' => 'desc',
+            'current_page' => 1
         ];
     }
 

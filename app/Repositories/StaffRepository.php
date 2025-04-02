@@ -8,7 +8,7 @@ use Exception;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Pagination\LengthAwarePaginator;
-
+use Illuminate\Support\Facades\DB;
 class StaffRepository implements StaffRepositoryInterface
 {
     protected $model;
@@ -29,7 +29,7 @@ class StaffRepository implements StaffRepositoryInterface
         $query = $this->model->query();
 
         if (isset($filters['name'])) {
-            $query->where('name', 'like', '%' . $filters['name'] . '%');
+            $query->where(DB::raw('CONCAT(first_name, " ", last_name)'), 'like', '%' . $filters['name'] . '%');
         }
 
         if (isset($filters['email'])) {
@@ -65,7 +65,11 @@ class StaffRepository implements StaffRepositoryInterface
         }
 
         if (isset($filters['sort_by'])) {
-            $query->orderBy($filters['sort_by'], $filters['sort_direction']);
+            if ($filters['sort_by'] == 'name') {
+                $query->orderBy(DB::raw('CONCAT(first_name, " ", last_name)'), $filters['sort_direction']);
+            } else {
+                $query->orderBy($filters['sort_by'], $filters['sort_direction']);
+            }
         }
 
         return $query->paginate($filters['per_page'], ['*'], 'page', $filters['current_page'] ?? 1);

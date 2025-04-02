@@ -49,7 +49,8 @@ class ListStudentRequest extends FormRequest
                 'enrollment_date',
                 'status',
                 'created_at',
-                'updated_at'
+                'updated_at',
+                'gender'
             ])],
             'sort_direction' => ['sometimes', 'string', Rule::in(['asc', 'desc'])],
             'current_page' => 'sometimes|integer|min:1',
