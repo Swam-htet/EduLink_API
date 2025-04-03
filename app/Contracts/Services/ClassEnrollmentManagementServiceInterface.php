@@ -48,4 +48,12 @@ interface ClassEnrollmentManagementServiceInterface
      * @return void
      */
     public function sendManualEnrollmentEmail(array $data): void;
+
+    /**
+     * Get completed students by class ID
+     *
+     * @param int $classId
+     * @return Collection
+     */
+    public function getCompletelyEnrolledStudentsByClassId(int $classId): Collection;
 }

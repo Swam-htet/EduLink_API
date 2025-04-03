@@ -105,4 +105,14 @@ class SubjectRepository implements SubjectRepositoryInterface
         $subject = $this->findById($id);
         $subject->delete();
     }
+
+    /**
+     * Get all subjects by course ID
+     * @param int $courseId
+     * @return Collection
+     */
+    public function getAllByCourseId(int $courseId): Collection
+    {
+        return $this->model->where('course_id', $courseId)->get();
+    }
 }

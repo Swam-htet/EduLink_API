@@ -33,8 +33,9 @@ class ManagementExamResource extends JsonResource
                 'duration' => $this->duration,
             ],
             'schedule' => [
-                'start_date' => $this->start_date?->format('Y-m-d H:i:s'),
-                'end_date' => $this->end_date?->format('Y-m-d H:i:s'),
+                'exam_date' => $this->exam_date?->format('Y-m-d'),
+                'start_time' => $this->start_time?->format('H:i'),
+                'end_time' => $this->end_time?->format('H:i'),
             ],
             'sections' => $this->whenLoaded('sections', function () {
                 return $this->sections->map(function ($section) {
@@ -43,6 +44,7 @@ class ManagementExamResource extends JsonResource
                         'section_number' => $section->section_number,
                         'section_title' => $section->section_title,
                         'section_description' => $section->section_description,
+                        'question_type' => $section->question_type,
                         'total_questions' => $section->total_questions,
                         'total_marks' => $section->total_marks,
                         'questions' => $this->formatQuestions($section->questions),

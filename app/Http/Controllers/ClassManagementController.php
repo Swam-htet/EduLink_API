@@ -6,18 +6,25 @@ use App\Http\Requests\Class\CreateClassRequest;
 use App\Http\Requests\Class\UpdateClassRequest;
 use App\Http\Requests\Class\FindClassByIdRequest;
 use App\Contracts\Services\ClassManagementServiceInterface;
+use App\Contracts\Services\SubjectManagementServiceInterface;
+use App\Contracts\Services\ClassEnrollmentManagementServiceInterface;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
 use App\Http\Requests\Class\ListClassRequest;
 use App\Http\Resources\Management\ManagementClassResource;
+use App\Http\Resources\Management\ManagementClassDetailResource;
 use Carbon\Carbon;
 class ClassManagementController extends Controller
 {
     protected $classService;
+    protected $subjectService;
+    protected $classEnrollmentService;
 
-    public function __construct(ClassManagementServiceInterface $classService)
+    public function __construct(ClassManagementServiceInterface $classService, SubjectManagementServiceInterface $subjectService, ClassEnrollmentManagementServiceInterface $classEnrollmentService)
     {
         $this->classService = $classService;
+        $this->subjectService = $subjectService;
+        $this->classEnrollmentService = $classEnrollmentService;
     }
 
     /**
@@ -27,15 +34,15 @@ class ClassManagementController extends Controller
      */
     public function index(ListClassRequest $request): JsonResponse
     {
-        $value = $this->classService->getAllClasses($request->filters());
+        $classes = $this->classService->getAllClasses($request->filters());
 
         return response()->json([
-            'data' => ManagementClassResource::collection($value->items()),
+            'data' => ManagementClassResource::collection($classes->items()),
             'meta' => [
-                'total' => $value->total(),
-                'per_page' => $value->perPage(),
-                'current_page' => $value->currentPage(),
-                'last_page' => $value->lastPage(),
+                'total' => $classes->total(),
+                'per_page' => $classes->perPage(),
+                'current_page' => $classes->currentPage(),
+                'last_page' => $classes->lastPage(),
             ],
             'timestamp' => Carbon::now()->format('Y-m-d H:i:s')
         ]);
@@ -64,9 +71,11 @@ class ClassManagementController extends Controller
     public function show(FindClassByIdRequest $request): JsonResponse
     {
         $class = $this->classService->getClassById($request->id);
+        $subjects = $this->subjectService->getAllSubjectsByCourseId($class->course_id);
+        $students = $this->classEnrollmentService->getCompletelyEnrolledStudentsByClassId($class->id);
 
         return response()->json([
-            'data' => new ManagementClassResource($class),
+            'data' => new ManagementClassDetailResource($class, $subjects, $students),
             'timestamp' => Carbon::now()->format('Y-m-d H:i:s')
         ]);
     }

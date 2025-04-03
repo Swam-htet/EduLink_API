@@ -20,14 +20,16 @@ class Exam extends Model
         'total_marks',
         'pass_marks',
         'duration',
-        'start_date',
-        'end_date',
+        'exam_date',
+        'start_time',
+        'end_time',
         'status',
     ];
 
     protected $casts = [
-        'start_date' => 'datetime',
-        'end_date' => 'datetime',
+        'exam_date' => 'date',
+        'start_time' => 'datetime',
+        'end_time' => 'datetime',
     ];
 
     public function class(): BelongsTo

@@ -164,4 +164,25 @@ class ClassEnrollmentManagementService implements ClassEnrollmentManagementServi
             $this->sendEnrollmentEmail($enrollment, $enrollment->student);
         }
     }
+
+
+
+    /**
+     * Get completely enrolled students by class ID
+     *
+     * @param int $classId
+     * @return Collection
+     */
+    public function getCompletelyEnrolledStudentsByClassId(int $classId): Collection
+    {
+        $enrollments = $this->enrollmentRepository->getCompletedEnrollmentsByClassId($classId);
+
+        $students = collect([]);
+
+        foreach ($enrollments as $enrollment) {
+            $students->push($enrollment->student);
+        }
+
+        return $students;
+    }
 }

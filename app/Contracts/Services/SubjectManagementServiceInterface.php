@@ -46,4 +46,12 @@ interface SubjectManagementServiceInterface
      * @return void
      */
     public function deleteSubject(int $id): void;
+
+    /**
+     * Get all subjects by course ID
+     *
+     * @param int $courseId
+     * @return Collection
+     */
+    public function getAllSubjectsByCourseId(int $courseId): Collection;
 }

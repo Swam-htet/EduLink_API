@@ -16,6 +16,7 @@ class ExamSection extends Model
         'exam_id',
         'section_number',
         'section_title',
+        'question_type',
         'section_description',
         'total_questions',
         'total_marks',

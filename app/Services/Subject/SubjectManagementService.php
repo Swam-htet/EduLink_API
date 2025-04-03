@@ -65,4 +65,14 @@ class SubjectManagementService implements SubjectManagementServiceInterface
     {
         $this->subjectRepository->delete($id);
     }
+
+    /**
+     * Get all subjects by course ID
+     * @param int $courseId
+     * @return Collection
+     */
+    public function getAllSubjectsByCourseId(int $courseId): Collection
+    {
+        return $this->subjectRepository->getAllByCourseId($courseId);
+    }
 }

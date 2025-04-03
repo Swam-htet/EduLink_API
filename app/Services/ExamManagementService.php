@@ -8,6 +8,7 @@ use App\Models\Tenants\Exam;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
+use Carbon\Carbon;
 
 class ExamManagementService implements ExamManagementServiceInterface
 {
@@ -27,6 +28,8 @@ class ExamManagementService implements ExamManagementServiceInterface
     {
         try {
             DB::beginTransaction();
+
+            $data['end_time'] = Carbon::parse($data['start_time'])->addMinutes((int) $data['duration']);
 
             // Create exam
             $exam = $this->examRepository->create($data);

@@ -47,4 +47,12 @@ interface SubjectRepositoryInterface
      * @return void
      */
     public function delete(int $id): void;
+
+    /**
+     * Get all subjects by course ID
+     *
+     * @param int $courseId
+     * @return Collection
+     */
+    public function getAllByCourseId(int $courseId): Collection;
 }

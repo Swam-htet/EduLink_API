@@ -17,9 +17,10 @@ return new class extends Migration
             $table->integer('total_marks');
             $table->integer('pass_marks');
             $table->integer('duration')->comment('in minutes');
-            $table->timestamp('start_date');
+            $table->date('exam_date');
+            $table->time('start_time');
+            $table->time('end_time');
             $table->boolean('allow_blank_answers')->default(true);
-            $table->timestamp('end_date');
             $table->enum('status', ['draft', 'published', 'confirmed', 'completed', 'cancelled'])->default('draft');
             $table->timestamps();
             $table->softDeletes();

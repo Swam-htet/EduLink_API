@@ -26,12 +26,13 @@ class ListExamRequest extends FormRequest
             'subject_id' => 'sometimes|integer|exists:tenant.subjects,id',
             'title' => 'sometimes|string',
             'status' => ['sometimes', Rule::in(['draft', 'published', 'ongoing', 'completed', 'cancelled'])],
-            'date_range' => 'sometimes|array',
-            'date_range.start' => 'required_with:date_range|date',
-            'date_range.end' => 'required_with:date_range|date|after_or_equal:date_range.start',
+            'exam_date' => 'sometimes|date',
+            'start_time' => 'sometimes|date_format:H:i',
+            'end_time' => 'sometimes|date_format:H:i',
             'per_page' => 'sometimes|integer|min:1|max:100',
-            'sort_by' => ['sometimes', Rule::in(['title', 'start_date', 'created_at'])],
+            'sort_by' => ['sometimes', Rule::in(['title', 'exam_date', 'created_at'])],
             'sort_direction' => ['sometimes', Rule::in(['asc', 'desc'])],
+            'current_page' => 'sometimes|integer|min:1',
         ];
     }
 
@@ -41,12 +42,15 @@ class ListExamRequest extends FormRequest
             'per_page' => $this->per_page ?? 15,
             'sort_by' => $this->sort_by ?? 'created_at',
             'sort_direction' => $this->sort_direction ?? 'desc',
+            'current_page' => $this->current_page ?? 1,
         ], array_filter($this->only([
             'class_id',
             'subject_id',
             'title',
             'status',
-            'date_range',
+            'exam_date',
+            'start_time',
+            'end_time',
         ])));
     }
 }

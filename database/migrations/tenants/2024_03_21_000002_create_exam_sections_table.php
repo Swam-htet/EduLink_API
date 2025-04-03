@@ -13,6 +13,7 @@ return new class extends Migration
             $table->foreignId('exam_id')->constrained('exams')->cascadeOnDelete();
             $table->integer('section_number');
             $table->string('section_title');
+            $table->string('question_type');
             $table->text('section_description')->nullable();
             $table->integer('total_questions')->default(0);
             $table->integer('total_marks')->default(0);

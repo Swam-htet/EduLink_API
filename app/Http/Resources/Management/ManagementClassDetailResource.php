@@ -4,9 +4,21 @@ namespace App\Http\Resources\Management;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use App\Http\Resources\Management\ManagementSubjectResource;
+use App\Http\Resources\Management\ManagementStudentResource;
 
-class ManagementClassResource extends JsonResource
+class ManagementClassDetailResource extends JsonResource
 {
+    public $subjects;
+    public $students;
+
+    public function __construct($resource, $subjects, $students)
+    {
+        parent::__construct($resource);
+        $this->subjects = $subjects;
+        $this->students = $students;
+    }
+
     /**
      * Transform the resource into an array.
      *
@@ -25,8 +37,11 @@ class ManagementClassResource extends JsonResource
             'status' => $this->status,
             'course' => new ManagementCourseResource($this->whenLoaded('course')),
             'teacher' => new ManagementStaffResource($this->whenLoaded('teacher')),
+            'subjects' => ManagementSubjectResource::collection($this->subjects),
+            'students' => ManagementStudentResource::collection($this->students),
             'created_at' => $this->created_at->format('Y-m-d H:i:s'),
             'updated_at' => $this->updated_at->format('Y-m-d H:i:s'),
         ];
     }
+
 }
