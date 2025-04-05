@@ -57,8 +57,7 @@ Route::prefix('staff')->group(function () {
 });
 
 // management api group with staff guard middleware
-// todo : need to add middleware for this management route group
-Route::prefix('management')->group(function () {
+Route::prefix('management')->middleware('auth:staff')->group(function () {
     Route::prefix('students')->group(function () {
         // get all students for management
         Route::get('/', [App\Http\Controllers\StudentManagementController::class, 'index']);

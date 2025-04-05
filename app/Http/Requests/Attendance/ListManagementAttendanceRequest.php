@@ -23,13 +23,24 @@ class ListManagementAttendanceRequest extends FormRequest
             'date_range.start' => 'required_with:date_range|date',
             'date_range.end' => 'required_with:date_range|date|after_or_equal:date_range.start',
             'per_page' => 'sometimes|integer|min:1|max:100',
+            'current_page' => 'sometimes|integer|min:1',
         ];
     }
 
     public function filters(): array
     {
-        return array_filter($this->validated(), function ($value) {
-            return $value !== null;
-        });
+        return array_merge(
+            $this->defaults(),
+            $this->validated()
+        );
     }
+
+    public function defaults(): array
+    {
+        return [
+            'per_page' => 15,
+            'current_page' => 1,
+        ];
+    }
+
 }

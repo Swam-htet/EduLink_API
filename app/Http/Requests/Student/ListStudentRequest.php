@@ -48,6 +48,7 @@ class ListStudentRequest extends FormRequest
                 'email',
                 'enrollment_date',
                 'status',
+                'phone',
                 'created_at',
                 'updated_at',
                 'gender'

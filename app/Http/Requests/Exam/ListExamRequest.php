@@ -36,21 +36,19 @@ class ListExamRequest extends FormRequest
         ];
     }
 
+    public function defaults(): array
+    {
+        return [
+            'per_page' => 15,
+            'current_page' => 1,
+        ];
+    }
+
     public function filters(): array
     {
-        return array_merge([
-            'per_page' => $this->per_page ?? 15,
-            'sort_by' => $this->sort_by ?? 'created_at',
-            'sort_direction' => $this->sort_direction ?? 'desc',
-            'current_page' => $this->current_page ?? 1,
-        ], array_filter($this->only([
-            'class_id',
-            'subject_id',
-            'title',
-            'status',
-            'exam_date',
-            'start_time',
-            'end_time',
-        ])));
+        return array_merge(
+            $this->defaults(),
+            $this->validated()
+        );
     }
 }

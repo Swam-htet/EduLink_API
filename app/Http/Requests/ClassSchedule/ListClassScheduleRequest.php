@@ -33,6 +33,7 @@ class ListClassScheduleRequest extends FormRequest
             'sort_by' => ['sometimes', 'string', Rule::in(['date', 'start_time', 'end_time', 'status'])],
             'sort_order' => ['sometimes', 'string', Rule::in(['asc', 'desc'])],
             'per_page' => 'sometimes|integer|min:1|max:100',
+            'current_page' => 'sometimes|integer|min:1',
         ];
     }
 
@@ -52,8 +53,17 @@ class ListClassScheduleRequest extends FormRequest
 
     public function filters(): array
     {
-        return array_filter($this->validated(), function ($value) {
-            return $value !== null;
-        });
+        return array_merge(
+            $this->defaults(),
+            $this->validated()
+        );
+    }
+
+    public function defaults(): array
+    {
+        return [
+            'per_page' => 15,
+            'current_page' => 1,
+        ];
     }
 }
