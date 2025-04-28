@@ -18,7 +18,7 @@ class ClassEnrollmentResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'student' => new StudentResource($this->student),
+            // 'student' => new StudentResource($this->student),
             'class' => new ClassResource($this->class),
             'status' => $this->status,
             'enrolled_at' => $this->enrolled_at?->format('Y-m-d H:i:s'),

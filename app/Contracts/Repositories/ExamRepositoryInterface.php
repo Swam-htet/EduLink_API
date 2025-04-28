@@ -14,4 +14,8 @@ interface ExamRepositoryInterface
     public function findById(int $id): Exam;
 
     public function update(int $id, array $data): Exam;
+
+    public function getPublishedExamById(int $id): Exam;
+
+    public function getFilteredExamsForStudent(array $filters): LengthAwarePaginator;
 }

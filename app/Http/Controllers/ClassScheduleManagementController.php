@@ -3,11 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ClassSchedule\CreateClassScheduleRequest;
-use App\Http\Requests\ClassSchedule\FindClassScheduleByIdRequest;
 use App\Contracts\Services\ClassScheduleManagementServiceInterface;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
 use App\Http\Resources\Management\ManagementClassScheduleResource;
+use App\Http\Requests\ClassSchedule\ListClassScheduleRequest;
+use Carbon\Carbon;
 
 class ClassScheduleManagementController extends Controller
 {
@@ -18,21 +19,13 @@ class ClassScheduleManagementController extends Controller
         $this->scheduleService = $scheduleService;
     }
 
-    public function index(): JsonResponse
+    public function index(ListClassScheduleRequest $request): JsonResponse
     {
-        $schedules = $this->scheduleService->getAllSchedules();
+        $schedules = $this->scheduleService->getAllSchedules($request->validated());
 
         return response()->json([
-            'data' => ManagementClassScheduleResource::collection($schedules)
-        ]);
-    }
-
-    private function show(FindClassScheduleByIdRequest $request): JsonResponse
-    {
-        $schedule = $this->scheduleService->getScheduleById($request->id);
-
-        return response()->json([
-            'data' => new ManagementClassScheduleResource($schedule)
+            'data' => ManagementClassScheduleResource::collection($schedules),
+            'timestamp' => Carbon::now()->format('Y-m-d H:i:s')
         ]);
     }
 
@@ -42,7 +35,7 @@ class ClassScheduleManagementController extends Controller
 
         return response()->json([
             'message' => 'Class schedule created successfully.',
-            'data' => ManagementClassScheduleResource::collection($schedules)
+            'timestamp' => Carbon::now()->format('Y-m-d H:i:s')
         ], Response::HTTP_CREATED);
     }
 }

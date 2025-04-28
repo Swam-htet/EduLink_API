@@ -102,13 +102,13 @@ return [
         'students' => [
             'provider' => 'students',
             'table' => 'password_reset_tokens',
-            'expire' => 60,
+            'expire' => env('PASSWORD_EXPIRE_TIME', 60), // 1 hour
             'throttle' => 60,
         ],
         'staff' => [
             'provider' => 'staff',
             'table' => 'password_reset_tokens',
-            'expire' => 60,
+            'expire' => env('PASSWORD_EXPIRE_TIME', 60), // 1 hour
             'throttle' => 60,
         ],
     ],

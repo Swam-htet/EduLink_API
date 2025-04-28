@@ -6,8 +6,8 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use App\Models\Tenants\Traits\UsesTenantConnection;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Laravel\Passport\HasApiTokens;
 
 class Student extends Authenticatable
@@ -57,4 +57,10 @@ class Student extends Authenticatable
     {
         return $this->hasMany(Attendance::class);
     }
+
+    public function classes(): BelongsToMany
+    {
+        return $this->belongsToMany(Classes::class, 'student_class_enrollments', 'student_id', 'class_id');
+    }
+
 }

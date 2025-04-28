@@ -21,7 +21,7 @@ return new class extends Migration
             $table->time('start_time');
             $table->time('end_time');
             $table->boolean('allow_blank_answers')->default(true);
-            $table->enum('status', ['draft', 'published', 'confirmed', 'completed', 'cancelled'])->default('draft');
+            $table->enum('status', ['draft', 'published','cancelled'])->default('draft');
             $table->timestamps();
             $table->softDeletes();
         });

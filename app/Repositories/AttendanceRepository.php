@@ -63,7 +63,7 @@ class AttendanceRepository implements AttendanceRepositoryInterface
         }
 
         return $query->latest()
-            ->paginate($filters['per_page'] ?? 15);
+            ->paginate($filters['per_page'] ?? 15, ['*'], 'page', $filters['current_page'] ?? 1);
     }
 
     public function findExistingAttendance(int $studentId, int $classScheduleId): ?Attendance

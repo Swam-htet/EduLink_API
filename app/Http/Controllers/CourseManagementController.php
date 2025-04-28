@@ -65,7 +65,6 @@ class CourseManagementController extends Controller
 
         return response()->json([
             'message' => 'Course created successfully.',
-            'data' => new ManagementCourseResource($course),
             'timestamp' => Carbon::now()->format('Y-m-d H:i:s')
         ], Response::HTTP_CREATED);
     }
@@ -82,7 +81,6 @@ class CourseManagementController extends Controller
 
         return response()->json([
             'message' => 'Course updated successfully.',
-            'data' => new ManagementCourseResource($course),
             'timestamp' => Carbon::now()->format('Y-m-d H:i:s')
         ], Response::HTTP_OK);
     }

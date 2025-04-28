@@ -8,7 +8,7 @@ use App\Http\Requests\Enrollment\EnrollmentListForStudentRequest;
 use App\Http\Resources\ClassEnrollmentResource;
 use Illuminate\Http\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
-
+use Carbon\Carbon;
 
 class ClassEnrollmentController extends Controller
 {
@@ -39,7 +39,8 @@ class ClassEnrollmentController extends Controller
                 'per_page' => $enrollments->perPage(),
                 'current_page' => $enrollments->currentPage(),
                 'last_page' => $enrollments->lastPage(),
-            ]
+            ],
+            'timestamp' => Carbon::now()->format('Y-m-d H:i:s')
         ], Response::HTTP_OK);
     }
 
@@ -55,7 +56,8 @@ class ClassEnrollmentController extends Controller
 
         return response()->json([
             'message' => 'Enrollment confirmed successfully.',
-            'data' => new ClassEnrollmentResource($enrollment)
+            'data' => new ClassEnrollmentResource($enrollment),
+            'timestamp' => Carbon::now()->format('Y-m-d H:i:s')
         ], Response::HTTP_OK);
     }
 }

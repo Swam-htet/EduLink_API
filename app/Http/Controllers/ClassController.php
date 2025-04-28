@@ -3,11 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Contracts\Services\ClassServiceInterface;
-use App\Http\Requests\Class\FindClassByIdRequest;
-use App\Http\Requests\Class\ListClassRequest;
 use App\Http\Resources\ClassResource;
 use Illuminate\Http\JsonResponse;
-
+use Carbon\Carbon;
+use Illuminate\Http\Request;
 class ClassController extends Controller
 {
     protected $classService;
@@ -17,39 +16,13 @@ class ClassController extends Controller
         $this->classService = $classService;
     }
 
-    /**
-     * Get all active classes
-     *
-     * @return JsonResponse
-     */
-    // todo : need to create filter request
-    public function index(ListClassRequest $request): JsonResponse
+
+    public function index(Request $request): JsonResponse
     {
-        $value = $this->classService->getAllClasses($request->filters());
-
+        $classes = $request->user()->classes;
         return response()->json([
-            'data' => ClassResource::collection($value->items()),
-            'meta' => [
-                'total' => $value->total(),
-                'per_page' => $value->perPage(),
-                'current_page' => $value->currentPage(),
-                'last_page' => $value->lastPage(),
-            ]
-        ]);
-    }
-
-    /**
-     * Get active class by ID
-     *
-     * @param FindClassByIdRequest $request
-     * @return JsonResponse
-     */
-    public function show(FindClassByIdRequest $request): JsonResponse
-    {
-        $class = $this->classService->getClassById($request->id);
-
-        return response()->json([
-            'data' => new ClassResource($class)
+            'data' => ClassResource::collection($classes),
+            'timestamp' => Carbon::now()->format('Y-m-d H:i:s')
         ]);
     }
 }

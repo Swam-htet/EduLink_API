@@ -11,11 +11,11 @@ return new class extends Migration
         Schema::create('tenant_configs', function (Blueprint $table) {
             $table->id();
             $table->string('key')->unique();
-            $table->text('value')->nullable();
-            $table->string('type')->default('string'); // string, boolean, integer, json
-            $table->string('group')->nullable(); // For grouping related configs
-            $table->text('description')->nullable();
-            $table->boolean('is_system')->default(false); // To identify system-level configs
+            $table->json('value')->nullable();
+            $table->string('type')->default('string');
+            $table->string('group')->default('general');
+            $table->string('description')->nullable();
+            $table->boolean('is_system')->default(false);
             $table->timestamps();
             $table->softDeletes();
         });

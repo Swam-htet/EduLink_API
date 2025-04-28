@@ -97,7 +97,7 @@ class StaffRepository implements StaffRepositoryInterface
 {
     try {
         // hash password
-        $data['password'] = Hash::make($data['password']);
+        $data['password'] = Hash::make("Password$123S");
 
         // join date today
         $data['joined_date'] = now();

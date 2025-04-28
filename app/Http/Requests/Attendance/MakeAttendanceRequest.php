@@ -14,14 +14,13 @@ class MakeAttendanceRequest extends FormRequest
     public function prepareForValidation(): void
     {
         $this->merge([
-            'student_id' => $this->route('student_id')
+            'class_schedule_id' => $this->route('class_schedule_id')
         ]);
     }
 
     public function rules(): array
     {
         return [
-            'student_id' => 'required|integer|exists:tenant.students,id',
             'class_schedule_id' => 'required|integer|exists:tenant.class_schedules,id',
             'remarks' => 'nullable|string|max:500',
         ];
@@ -30,7 +29,6 @@ class MakeAttendanceRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'student_id.exists' => 'Student not found.',
             'class_schedule_id.exists' => 'Class schedule not found.',
         ];
     }

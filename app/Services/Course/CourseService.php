@@ -39,12 +39,6 @@ class CourseService implements CourseServiceInterface
     {
         $course = $this->courseRepository->findById($id);
 
-        if (!$course || $course->status !== 'active') {
-            throw ValidationException::withMessages([
-                'id' => ['Course not found or not active.']
-            ]);
-        }
-
         return $course;
     }
 }

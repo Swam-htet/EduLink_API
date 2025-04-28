@@ -31,43 +31,47 @@ class AttendanceService implements AttendanceServiceInterface
      */
     public function makeAttendance(int $studentId, array $data): Attendance
     {
-
-        // check student is enrolled in the class schedule's class id in class_enrollments table
-        $enrollment = $this->enrollmentRepository->getCompletedEnrollmentByStudentIdAndClassId($studentId, $data['class_schedule_id']);
-
-        if (!$enrollment) {
-            throw ValidationException::withMessages([
-                'class_schedule_id' => 'Student is not enrolled in this class'
-            ]);
-        }
-
         // Get class schedule using repository
         $schedule = $this->scheduleRepository->findById($data['class_schedule_id']);
 
-        if (!$schedule) {
-            throw ValidationException::withMessages([
-                'class_schedule_id' => 'Class schedule not found'
-            ]);
-        }
+        // if (!$schedule) {
+        //     throw ValidationException::withMessages([
+        //         'class_schedule_id' => 'Class schedule not found'
+        //     ]);
+        // }
 
-        // Check if class schedule is active
-        if ($schedule->status !== 'active') {
-            throw ValidationException::withMessages([
-                'class_schedule_id' => 'Class schedule is not active'
-            ]);
-        }
+        // // Check if class schedule is cancelled or completed
+        // if ($schedule->status === 'cancelled' || $schedule->status === 'completed') {
+        //     throw ValidationException::withMessages([
+        //         'class_schedule_id' => 'Class schedule is cancelled or completed'
+        //     ]);
+        // }
 
-        // Check if attendance already exists using repository
-        $existingAttendance = $this->attendanceRepository->findExistingAttendance(
-            $studentId,
-            $data['class_schedule_id']
-        );
+        // // Check if it's too early to make attendance (before class starts)
+        // if ($schedule->start_time > now()) {
+        //     throw ValidationException::withMessages([
+        //         'class_schedule_id' => 'Too early to make attendance'
+        //     ]);
+        // }
 
-        if ($existingAttendance) {
-            throw ValidationException::withMessages([
-                'class_schedule_id' => 'Attendance already exists'
-            ]);
-        }
+        // // Check if it's too late to make attendance (after class end time)
+        // if ($schedule->end_time < now()) {
+        //     throw ValidationException::withMessages([
+        //         'class_schedule_id' => 'Too late to make attendance'
+        //     ]);
+        // }
+
+        // // Check if attendance already exists using repository
+        // $existingAttendance = $this->attendanceRepository->findExistingAttendance(
+        //     $studentId,
+        //     $data['class_schedule_id']
+        // );
+
+        // if ($existingAttendance) {
+        //     throw ValidationException::withMessages([
+        //         'class_schedule_id' => 'Attendance already exists'
+        //     ]);
+        // }
 
         $time_in = now();
 
@@ -87,17 +91,5 @@ class AttendanceService implements AttendanceServiceInterface
         ];
 
         return $this->attendanceRepository->create($attendanceData);
-    }
-
-    /**
-     * Get paginated attendances by student ID
-     *
-     * @param int $studentId
-     * @param array $filters
-     * @return LengthAwarePaginator
-     */
-    public function getAttendancesByStudentId(int $studentId, array $filters): LengthAwarePaginator
-    {
-        return $this->attendanceRepository->getPaginatedAttendancesByStudentId($studentId, $filters);
     }
 }

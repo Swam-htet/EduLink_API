@@ -30,7 +30,7 @@ class UpdateExamRequest extends FormRequest
             'duration' => 'sometimes|integer|min:1',
             'start_date' => 'sometimes|date|after:now',
             'end_date' => 'sometimes|date|after:start_date',
-            'status' => ['sometimes', 'string', Rule::in(['draft', 'published', 'ongoing', 'completed', 'cancelled'])],
+            'status' => ['sometimes', 'string', Rule::in(['draft', 'published','cancelled'])],
             'sections' => 'sometimes|array|min:1',
             'sections.*.section_number' => 'required|integer|min:1',
             'sections.*.section_title' => 'required|string|max:255',

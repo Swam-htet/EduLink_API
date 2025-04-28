@@ -16,10 +16,8 @@ return new class extends Migration
             $table->integer('total_questions');
             $table->integer('correct_answers');
             $table->integer('wrong_answers');
-            $table->decimal('percentage', 5, 2);
+            $table->enum('condition', ['auto-generated', 'manual-updated', 'final-result'])->default('auto-generated');
             $table->enum('status', ['pass', 'fail'])->default('fail');
-            $table->timestamp('started_at');
-            $table->timestamp('completed_at');
             $table->timestamps();
             $table->softDeletes();
 

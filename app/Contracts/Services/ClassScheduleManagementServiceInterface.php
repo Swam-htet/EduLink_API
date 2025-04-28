@@ -12,7 +12,7 @@ interface ClassScheduleManagementServiceInterface
      *
      * @return Collection
      */
-    public function getAllSchedules(): Collection;
+    public function getAllSchedules(array $filters): Collection;
 
     /**
      * Get schedule by ID
@@ -29,4 +29,12 @@ interface ClassScheduleManagementServiceInterface
      * @return Collection
      */
     public function createMultipleSchedules(array $data): Collection;
+
+    /**
+     * Get all schedules by class ID
+     *
+     * @param int $classId
+     * @return Collection
+     */
+    public function getAllSchedulesByClassId(int $classId): Collection;
 }

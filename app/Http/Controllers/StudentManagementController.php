@@ -53,7 +53,6 @@ class StudentManagementController extends Controller
 
         return response()->json([
             'message' => 'Student registration approved successfully.',
-            'data' => new ManagementStudentResource($student),
             'timestamp' => Carbon::now()->format('Y-m-d H:i:s')
         ]);
 
@@ -71,7 +70,6 @@ class StudentManagementController extends Controller
 
         return response()->json([
             'message' => 'Student registration rejected successfully.',
-            'data' => new ManagementStudentResource($student),
             'timestamp' => Carbon::now()->format('Y-m-d H:i:s')
         ]);
 

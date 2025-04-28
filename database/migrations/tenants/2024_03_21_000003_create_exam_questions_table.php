@@ -10,7 +10,6 @@ return new class extends Migration
     {
         Schema::create('exam_questions', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('exam_id')->constrained('exams')->cascadeOnDelete();
             $table->foreignId('section_id')->constrained('exam_sections')->cascadeOnDelete();
             $table->text('question');
             $table->enum('type', [

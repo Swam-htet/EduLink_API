@@ -10,9 +10,10 @@ interface ClassScheduleRepositoryInterface
     /**
      * Get all schedules
      *
+     * @param array $filters
      * @return Collection
      */
-    public function getAll(): Collection;
+    public function getAll(array $filters): Collection;
 
     /**
      * Find schedule by ID
@@ -48,4 +49,12 @@ interface ClassScheduleRepositoryInterface
      * @return ClassSchedule|null
      */
     public function findConflictSchedule(int $classId, string $date, string $startTime, string $endTime): ?ClassSchedule;
+
+    /**
+     * Get all schedules by class ID
+     *
+     * @param int $classId
+     * @return Collection
+     */
+    public function getAllByClassId(int $classId): Collection;
 }

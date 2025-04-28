@@ -11,9 +11,9 @@ class TenantSeeder extends Seeder
     {
         $tenants = [
             [
-                'name' => 'University of Glasgow',
-                'domain' => 'uog_edulink',
-                'database_name' => 'uog_edulink',
+                'name' => 'Yangon International School',
+                'domain' => 'yis_edulink',
+                'database_name' => 'yis_edulink',
                 'created_at' => now(),
                 'updated_at' => now(),
             ]

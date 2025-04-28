@@ -6,7 +6,7 @@ use App\Contracts\Services\CourseServiceInterface;
 use App\Http\Requests\Course\ListCourseRequest;
 use App\Http\Resources\CourseResource;
 use Illuminate\Http\JsonResponse;
-
+use Carbon\Carbon;
 class CourseController extends Controller
 {
     protected $courseService;
@@ -24,11 +24,11 @@ class CourseController extends Controller
      */
     public function index(ListCourseRequest $request): JsonResponse
     {
-        dd($request->validated());
         $courses = $this->courseService->getAllActiveCourses($request->filters());
 
         return response()->json([
-            'data' => CourseResource::collection($courses)
+            'data' => CourseResource::collection($courses),
+            'timestamp' => Carbon::now()->format('Y-m-d H:i:s')
         ]);
     }
 
@@ -43,7 +43,8 @@ class CourseController extends Controller
         $course = $this->courseService->getActiveCourseById($id);
 
         return response()->json([
-            'data' => new CourseResource($course)
+            'data' => new CourseResource($course),
+            'timestamp' => Carbon::now()->format('Y-m-d H:i:s')
         ]);
     }
 }

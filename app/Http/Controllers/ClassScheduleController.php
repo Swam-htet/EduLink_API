@@ -9,6 +9,8 @@ use App\Http\Resources\ClassScheduleDetailResource;
 use Illuminate\Http\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use App\Http\Requests\Class\FindClassByIdRequest;
+use Carbon\Carbon;
+
 class ClassScheduleController extends Controller
 {
     protected $scheduleService;
@@ -23,10 +25,11 @@ class ClassScheduleController extends Controller
      */
     public function index(ListClassScheduleRequest $request): JsonResponse
     {
-        $schedules = $this->scheduleService->getSchedules($request->filters());
+        $schedules = $this->scheduleService->getSchedules($request->validated());
 
         return response()->json([
             'data' => ClassScheduleResource::collection($schedules),
+            'timestamp' => Carbon::now()->format('Y-m-d H:i:s')
         ], Response::HTTP_OK);
     }
 
@@ -41,7 +44,8 @@ class ClassScheduleController extends Controller
         );
 
         return response()->json([
-            'data' => new ClassScheduleDetailResource($schedule)
+            'data' => new ClassScheduleDetailResource($schedule),
+            'timestamp' => Carbon::now()->format('Y-m-d H:i:s')
         ], Response::HTTP_OK);
     }
 }

@@ -23,15 +23,4 @@ class TenantConfig extends Model
         'value' => 'json',
         'is_system' => 'boolean',
     ];
-
-    // Helper method to get config value with proper type casting
-    public function getTypedValueAttribute()
-    {
-        return match($this->type) {
-            'boolean' => (bool) $this->value,
-            'integer' => (int) $this->value,
-            'json' => json_decode($this->value, true),
-            default => $this->value,
-        };
-    }
 }

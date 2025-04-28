@@ -33,14 +33,6 @@ class SubjectService implements SubjectServiceInterface
      */
     public function getSubjectById(int $id): Subject
     {
-        $subject = $this->subjectRepository->findById($id);
-
-        if (!$subject) {
-            throw ValidationException::withMessages([
-                'id' => ['Subject not found or not active.']
-            ]);
-        }
-
-        return $subject;
+        return $this->subjectRepository->findById($id);
     }
 }

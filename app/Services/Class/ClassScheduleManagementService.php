@@ -23,9 +23,9 @@ class ClassScheduleManagementService implements ClassScheduleManagementServiceIn
         $this->classRepository = $classRepository;
     }
 
-    public function getAllSchedules(): Collection
+    public function getAllSchedules(array $filters): Collection
     {
-        return $this->scheduleRepository->getAll();
+        return $this->scheduleRepository->getAll($filters);
     }
 
     public function getScheduleById(int $id): ClassSchedule
@@ -79,5 +79,10 @@ class ClassScheduleManagementService implements ClassScheduleManagementServiceIn
             $createdSchedules->push($this->createSchedule($schedule));
         }
         return $createdSchedules;
+    }
+
+    public function getAllSchedulesByClassId(int $classId): Collection
+    {
+        return $this->scheduleRepository->getAllByClassId($classId);
     }
 }

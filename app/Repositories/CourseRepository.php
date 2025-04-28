@@ -57,9 +57,6 @@ class CourseRepository implements CourseRepositoryInterface
             $query->where('code', 'like', "%{$filters['code']}%");
         }
 
-        // status is active
-        $query->where('status', 'active');
-
         $query->orderBy($filters['sort_by'] ?? 'created_at', $filters['sort_direction'] ?? 'desc');
 
         return $query->get();
@@ -82,8 +79,6 @@ class CourseRepository implements CourseRepositoryInterface
      */
     public function create(array $data): Course
     {
-        // default status is active
-        $data['status'] = 'active';
         $data['code'] = $this->generateCourseCode();
         return $this->model->create($data);
     }

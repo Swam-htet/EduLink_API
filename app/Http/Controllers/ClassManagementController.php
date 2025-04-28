@@ -8,6 +8,7 @@ use App\Http\Requests\Class\FindClassByIdRequest;
 use App\Contracts\Services\ClassManagementServiceInterface;
 use App\Contracts\Services\SubjectManagementServiceInterface;
 use App\Contracts\Services\ClassEnrollmentManagementServiceInterface;
+use App\Contracts\Services\ClassScheduleManagementServiceInterface;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
 use App\Http\Requests\Class\ListClassRequest;
@@ -19,12 +20,13 @@ class ClassManagementController extends Controller
     protected $classService;
     protected $subjectService;
     protected $classEnrollmentService;
-
-    public function __construct(ClassManagementServiceInterface $classService, SubjectManagementServiceInterface $subjectService, ClassEnrollmentManagementServiceInterface $classEnrollmentService)
+    protected $classScheduleService;
+    public function __construct(ClassManagementServiceInterface $classService, SubjectManagementServiceInterface $subjectService, ClassEnrollmentManagementServiceInterface $classEnrollmentService, ClassScheduleManagementServiceInterface $classScheduleService)
     {
         $this->classService = $classService;
         $this->subjectService = $subjectService;
         $this->classEnrollmentService = $classEnrollmentService;
+        $this->classScheduleService = $classScheduleService;
     }
 
     /**
@@ -73,9 +75,10 @@ class ClassManagementController extends Controller
         $class = $this->classService->getClassById($request->id);
         $subjects = $this->subjectService->getAllSubjectsByCourseId($class->course_id);
         $students = $this->classEnrollmentService->getCompletelyEnrolledStudentsByClassId($class->id);
+        $schedules = $this->classScheduleService->getAllSchedulesByClassId($class->id);
 
         return response()->json([
-            'data' => new ManagementClassDetailResource($class, $subjects, $students),
+            'data' => new ManagementClassDetailResource($class, $subjects, $students, $schedules),
             'timestamp' => Carbon::now()->format('Y-m-d H:i:s')
         ]);
     }
@@ -91,7 +94,6 @@ class ClassManagementController extends Controller
 
         return response()->json([
             'message' => 'Class created successfully.',
-            'data' => new ManagementClassResource($class),
             'timestamp' => Carbon::now()->format('Y-m-d H:i:s')
         ], Response::HTTP_CREATED);
     }
@@ -110,7 +112,6 @@ class ClassManagementController extends Controller
 
         return response()->json([
             'message' => 'Class updated successfully.',
-            'data' => new ManagementClassResource($class),
             'timestamp' => Carbon::now()->format('Y-m-d H:i:s')
         ]);
     }

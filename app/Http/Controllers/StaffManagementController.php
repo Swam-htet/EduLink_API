@@ -63,7 +63,6 @@ class StaffManagementController extends Controller
         $staff = $this->staffManagementService->createStaff($request->validated());
         return response()->json([
             'message' => 'Staff created successfully',
-            'data' => new ManagementStaffResource($staff),
             'timestamp' => Carbon::now()->format('Y-m-d H:i:s')
         ], Response::HTTP_CREATED);
     }

@@ -15,9 +15,15 @@ class ClassScheduleRepository implements ClassScheduleRepositoryInterface
         $this->model = $model;
     }
 
-    public function getAll(): Collection
+    public function getAll(array $filters): Collection
     {
-        return $this->model->with(['class', 'class.teacher', 'staff', 'subject'])->get();
+        $query = $this->model->with(['class', 'class.teacher', 'staff', 'subject']);
+
+        if (isset($filters['class_id'])) {
+            $query->where('class_id', $filters['class_id']);
+        }
+
+        return $query->get();
     }
 
     public function findById(int $id): ?ClassSchedule
@@ -48,6 +54,13 @@ class ClassScheduleRepository implements ClassScheduleRepositoryInterface
             ->first();
 
         return $conflictSchedule;
+    }
+
+    public function getAllByClassId(int $classId): Collection
+    {
+        return $this->model->with(['class', 'class.teacher', 'staff', 'subject'])
+            ->where('class_id', $classId)
+            ->get();
     }
 
 }

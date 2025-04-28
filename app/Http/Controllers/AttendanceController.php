@@ -8,7 +8,7 @@ use App\Http\Requests\Attendance\ListAttendanceRequest;
 use App\Http\Resources\AttendanceResource;
 use Illuminate\Http\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
-
+use Carbon\Carbon;
 class AttendanceController extends Controller
 {
     protected $attendanceService;
@@ -21,37 +21,15 @@ class AttendanceController extends Controller
     /**
      * Make attendance for student
      */
-    public function makeAttendance(MakeAttendanceRequest $request, string $studentId): JsonResponse
+    public function makeAttendance(MakeAttendanceRequest $request) : JsonResponse
     {
-        $attendance = $this->attendanceService->makeAttendance(
-            (int) $studentId,
-            $request->validated()
-        );
+        $studentId = $request->user()->id;
+
+        $this->attendanceService->makeAttendance($studentId, $request->validated());
 
         return response()->json([
             'message' => 'Attendance recorded successfully',
-            'data' => new AttendanceResource($attendance)
+            'timestamp' => Carbon::now()->format('Y-m-d H:i:s')
         ], Response::HTTP_CREATED);
-    }
-
-    /**
-     * Get attendances by student ID
-     */
-    public function getAttendancesByStudentId(ListAttendanceRequest $request, string $studentId): JsonResponse
-    {
-        $attendances = $this->attendanceService->getAttendancesByStudentId(
-            (int) $studentId,
-            $request->filters()
-        );
-
-        return response()->json([
-            'data' => AttendanceResource::collection($attendances),
-            'meta' => [
-                'total' => $attendances->total(),
-                'per_page' => $attendances->perPage(),
-                'current_page' => $attendances->currentPage(),
-                'last_page' => $attendances->lastPage(),
-            ]
-        ], Response::HTTP_OK);
     }
 }

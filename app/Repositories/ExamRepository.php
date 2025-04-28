@@ -68,4 +68,16 @@ class ExamRepository implements ExamRepositoryInterface
         $exam->update($data);
         return $exam;
     }
+
+    public function getPublishedExamById(int $id): Exam
+    {
+        return $this->model->where('status', 'published')->findOrFail($id);
+    }
+
+    public function getFilteredExamsForStudent(array $filters): LengthAwarePaginator
+    {
+        $filters['status'] = 'published';
+        $result = $this->getPaginatedExams($filters);
+        return $result;
+    }
 }

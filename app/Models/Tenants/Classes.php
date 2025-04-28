@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use App\Models\Tenants\Traits\UsesTenantConnection;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 class Classes extends Model
 {
     use SoftDeletes, UsesTenantConnection;
@@ -47,6 +48,11 @@ class Classes extends Model
 
     public function enrollments(): HasMany
     {
-        return $this->hasMany(StudentClassEnrollment::class);
+        return $this->hasMany(StudentClassEnrollment::class, 'class_id');
+    }
+
+    public function students(): BelongsToMany
+    {
+        return $this->belongsToMany(Student::class, 'student_class_enrollments', 'class_id', 'student_id');
     }
 }
