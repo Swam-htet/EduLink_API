@@ -15,6 +15,8 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
 use Carbon\Carbon;
 use Illuminate\Support\Collection;
+use App\Mail\ExamResultMail;
+use Illuminate\Support\Facades\Mail;
 
 class ExamService implements ExamServiceInterface
 {
@@ -458,9 +460,11 @@ class ExamService implements ExamServiceInterface
         return $student_responses;
     }
 
-    public function updateExamResponse(int $answerId, int $marks, string $comments): bool
+    public function updateExamResponse(int $answerId, int $resultId, int $marks, string $comments): bool
     {
-        return $this->studentExamResponseRepository->update($answerId, $marks, $comments);
+        $this->studentExamResponseRepository->update($answerId, $marks, $comments);
+        $this->examResultRepository->update($resultId, $marks);
+        return true;
     }
 
     public function sendExamResultsToStudents(int $examId): bool
@@ -476,8 +480,21 @@ class ExamService implements ExamServiceInterface
         return true;
     }
 
-    private function sentExamResultMailToStudent(Student $student, ExamResult $examResult): void
+    private function sentExamResultMailToStudent(Student $student, $examResult): void
     {
-        // todo : sent mail to student
+        if ($student->email && $examResult) {
+            Mail::to($student->email)->send(new ExamResultMail(
+                [
+                    'student_name' => $student->first_name . ' ' . $student->last_name,
+                    'exam_title' => $examResult->exam->title,
+                    'total_marks_obtained' => $examResult->total_marks_obtained,
+                    'total_questions' => $examResult->total_questions,
+                    'correct_answers' => $examResult->correct_answers,
+                    'wrong_answers' => $examResult->wrong_answers,
+                    'status' => $examResult->status,
+                    'exam_result_id' => $examResult->id,
+                ]
+            ));
+        }
     }
 }

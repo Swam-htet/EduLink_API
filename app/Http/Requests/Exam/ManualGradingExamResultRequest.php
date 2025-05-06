@@ -17,6 +17,7 @@ class ManualGradingExamResultRequest extends FormRequest
             'answer_id' => ['required', 'integer', 'exists:tenant.student_exam_responses,id'],
             'marks' => ['required', 'numeric', 'min:1'],
             'comments' => ['nullable', 'string', 'max:1000'],
+            'result_id' => ['required', 'integer', 'exists:tenant.exam_results,id'],
         ];
     }
 
@@ -30,6 +31,8 @@ class ManualGradingExamResultRequest extends FormRequest
             'marks.min' => 'Marks cannot be negative',
             'comments.string' => 'Comments must be a string',
             'comments.max' => 'Comments cannot exceed 1000 characters',
+            'result_id.required' => 'Result ID is required',
+            'result_id.exists' => 'The selected result does not exist',
         ];
     }
 }

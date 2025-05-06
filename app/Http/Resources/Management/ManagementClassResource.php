@@ -23,8 +23,8 @@ class ManagementClassResource extends JsonResource
             'end_date' => $this->end_date->format('Y-m-d'),
             'capacity' => $this->capacity,
             'status' => $this->status,
-            'course' => new ManagementCourseResource($this->whenLoaded('course')),
-            'teacher' => new ManagementStaffResource($this->whenLoaded('teacher')),
+            // 'course' => new ManagementCourseResource($this->whenLoaded('course')),
+            // 'teacher' => new ManagementStaffResource($this->whenLoaded('teacher')),
             'created_at' => $this->created_at->format('Y-m-d H:i:s'),
             'updated_at' => $this->updated_at->format('Y-m-d H:i:s'),
         ];

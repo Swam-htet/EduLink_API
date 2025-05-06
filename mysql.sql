@@ -100,7 +100,7 @@ INSERT INTO tenant_configs (`key`, `value`, `type`, `group`, `description`, `is_
 (
     'hero',
     '{
-        "title": "Welcome to Yangon International School",
+        "title": "Yangon International School",
         "subtitle": "Empowering minds, shaping futures through quality education and innovation",
         "image": "https://images.unsplash.com/photo-1505852679233-d9fd70aff56d?q=80&w=3540&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
     }',

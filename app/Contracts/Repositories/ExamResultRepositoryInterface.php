@@ -8,6 +8,8 @@ interface ExamResultRepositoryInterface
 {
     public function create(array $data): ExamResult;
 
+    public function update(int $resultId, $incrementMarks): bool;
+
     public function getExamResultByStudentIdAndExamId(int $studentId, int $examId): ?ExamResult;
 
     public function getExamResultsByExamId(int $examId): Collection;

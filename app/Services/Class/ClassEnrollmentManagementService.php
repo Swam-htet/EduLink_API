@@ -12,6 +12,8 @@ use Illuminate\Validation\ValidationException;
 use Illuminate\Pagination\LengthAwarePaginator;
 use App\Helpers\TokenHelper;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\Student\ClassInvitationMail;
 
 
 class ClassEnrollmentManagementService implements ClassEnrollmentManagementServiceInterface
@@ -146,8 +148,13 @@ class ClassEnrollmentManagementService implements ClassEnrollmentManagementServi
 
         $url = config('app.url') . '?token=' . $generatedToken->token;
 
-        //    todo : need to add email template
-        // Mail::to($student->email)->send(new ClassInvitationEmail($enrollment, $customMessage, $url));
+        // todo : need to add email template
+        Mail::to($student->email)->send(new ClassInvitationMail([
+            'student_name' => $student->first_name . ' ' . $student->last_name,
+            'class_name' => $enrollment->class->name,
+            'url' => $url,
+            'expires_in' => '1 hour'
+        ]));
     }
 
     public function sendManualEnrollmentEmail(array $data): void

@@ -102,7 +102,7 @@ interface ExamServiceInterface
      * @param string $comments
      * @return bool
      */
-    public function updateExamResponse(int $answerId, int $marks, string $comments): bool;
+    public function updateExamResponse(int $answerId, int $resultId, int $marks, string $comments): bool;
 
     /**
      * Get exam results

@@ -7,7 +7,7 @@ use App\Contracts\Repositories\StudentRepositoryInterface;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Pagination\LengthAwarePaginator;
-
+use Illuminate\Support\Facades\DB;
 class StudentRepository implements StudentRepositoryInterface
 {
     protected $model;
@@ -32,8 +32,11 @@ class StudentRepository implements StudentRepositoryInterface
         }
 
         if (isset($filters['name'])) {
-            $query->where('first_name', 'like', '%' . $filters['name'] . '%')
-                ->orWhere('last_name', 'like', '%' . $filters['name'] . '%');
+            $query->where(function($query) use ($filters) {
+                // $query->where('first_name', 'like', '%' . $filters['name'] . '%')
+                //       ->orWhere('last_name', 'like', '%' . $filters['name'] . '%');
+                $query->where(DB::raw('CONCAT(first_name, " ", last_name)'), 'like', '%' . $filters['name'] . '%');
+            });
         }
 
         if (isset($filters['email'])) {
@@ -73,7 +76,11 @@ class StudentRepository implements StudentRepositoryInterface
         }
 
         if (isset($filters['sort_by'])) {
-            $query->orderBy($filters['sort_by'], $filters['sort_direction'] ?? 'asc');
+            if($filters['sort_by'] == 'name'){
+                $query->orderBy(DB::raw('CONCAT(first_name, " ", last_name)'), $filters['sort_direction'] ?? 'asc');
+            }else{
+                $query->orderBy($filters['sort_by'], $filters['sort_direction'] ?? 'asc');
+            }
         }
 
         return $query->paginate($filters['per_page'] ?? 10, ['*'], 'page', $filters['current_page'] ?? 1);

@@ -62,5 +62,4 @@ class Student extends Authenticatable
     {
         return $this->belongsToMany(Classes::class, 'student_class_enrollments', 'student_id', 'class_id');
     }
-
 }

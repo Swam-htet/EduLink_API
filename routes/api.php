@@ -274,4 +274,8 @@ Route::middleware('auth:student')->prefix('student')->group(function () {
     });
 });
 
-Route::get('/configs', [App\Http\Controllers\TenantLandingController::class, 'getLandingData']);
+Route::prefix('configs')->group(function () {
+    Route::get('/', [App\Http\Controllers\TenantLandingController::class, 'getLandingData']);
+    Route::get('/{key}', [App\Http\Controllers\TenantLandingController::class, 'getLandingDataByKey']);
+});
+

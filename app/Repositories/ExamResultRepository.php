@@ -39,4 +39,22 @@ class ExamResultRepository implements ExamResultRepositoryInterface
     {
         return $this->model->where(['exam_id' => $examId, 'student_id' => $studentId])->first();
     }
+
+    public function update(int $resultId, $incrementMarks): bool
+    {
+        $examResult = $this->getExamResultByResultId($resultId);
+        // increase total marks obtained
+        // increase count + 1 to correct answers
+        // reduce count -1 to wrong answers
+
+        // if condition is auto-generated update to manual-updated
+
+        $examResult->total_marks_obtained += $incrementMarks;
+        $examResult->correct_answers += 1;
+        $examResult->wrong_answers -= 1;
+        if ($examResult->condition === 'auto-generated') {
+            $examResult->condition = 'manual-updated';
+        }
+        return $examResult->save();
+    }
 }

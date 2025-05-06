@@ -63,7 +63,34 @@ class ManagementClassDetailResource extends JsonResource
                     'attendance' => $this->getRandomAttendancePercentage(),
                 ];
             }),
-            'schedules' => ManagementClassScheduleResource::collection($this->schedules),
+            'schedules' => $this->schedules->map(function ($schedule) {
+                return [
+                    'id' => $schedule->id,
+                    'subject' => [
+                        'id' => $schedule->subject->id,
+                        'title' => $schedule->subject->title,
+                        'code' => $schedule->subject->code,
+                    ],
+                    'tutor' => [
+                        'id' => $schedule->staff->id,
+                        'first_name' => $schedule->staff->first_name,
+                        'last_name' => $schedule->staff->last_name,
+                        'email' => $schedule->staff->email,
+                        'phone' => $schedule->staff->phone,
+                    ],
+                    'late_mins' => $schedule->late_mins,
+                    'schedule_details' => [
+                        'schedule_status' => $schedule->start_time->isPast() ? ($schedule->status === 'completed' ? 'completed' : ($schedule->status === 'cancelled' ? 'cancelled' : 'pending')) : 'ongoing',
+                        'start_date' => $schedule->date && $schedule->start_time
+                            ? $schedule->date->format('Y-m-d') . ' ' . $schedule->start_time->format('H:i:s')
+                            : null,
+                        'end_date' => $schedule->date && $schedule->end_time
+                            ? $schedule->date->format('Y-m-d') . ' ' . $schedule->end_time->format('H:i:s')
+                            : null,
+                        'late_mins' => $schedule->late_mins,
+                    ],
+                ];
+            }),
             'created_at' => $this->created_at->format('Y-m-d H:i:s'),
             'updated_at' => $this->updated_at->format('Y-m-d H:i:s'),
         ];

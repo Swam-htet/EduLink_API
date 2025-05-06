@@ -32,7 +32,11 @@ class StudentRegistrationService implements StudentRegistrationServiceInterface
             // Create the student
             $student = $this->studentRepository->create($data);
 
-            // todo : Send registration pending email
+            Mail::to($student->email)->send(new RegistrationPendingMail([
+                'name' => $student->name,
+                'email' => $student->email,
+                'student_id' => $student->student_id,
+            ]));
 
             DB::commit();
             return $student;

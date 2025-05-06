@@ -43,8 +43,7 @@ class ListStudentRequest extends FormRequest
             'per_page' => 'sometimes|integer|min:1|max:100',
             'sort_by' => ['sometimes', 'string', Rule::in([
                 'student_id',
-                'first_name',
-                'last_name',
+                'name',
                 'email',
                 'enrollment_date',
                 'status',

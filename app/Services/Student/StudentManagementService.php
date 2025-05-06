@@ -8,7 +8,9 @@ use App\Models\Tenants\Student;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Pagination\LengthAwarePaginator;
-
+use Illuminate\Support\Facades\Mail;
+use App\Mail\Student\RegistrationApprovedMail;
+use App\Mail\Student\RegistrationRejectedMail;
 class StudentManagementService implements StudentManagementServiceInterface
 {
     protected $studentRepository;
@@ -47,8 +49,13 @@ class StudentManagementService implements StudentManagementServiceInterface
                 'status' => 'active',
             ]);
 
-            // todo : send approval email to student
-
+            Mail::to($student->email)->send(new RegistrationApprovedMail([
+                'name' => $student->name,
+                'email' => $student->email,
+                'student_id' => $student->student_id,
+                // todo : need to fix later with dynamic student portal login url
+                'login_url' =>  '/login',
+            ]));
 
             DB::commit();
             return $student;
@@ -87,8 +94,12 @@ class StudentManagementService implements StudentManagementServiceInterface
                 'status' => 'rejected',
             ]);
 
-            // todo : send rejection email to student
-
+            Mail::to($student->email)->send(new RegistrationRejectedMail([
+                'name' => $student->name,
+                'email' => $student->email,
+                'student_id' => $student->student_id,
+                'reason' => $data['reason'] ?? "Student registration rejected by admin",
+            ]));
 
             DB::commit();
             return $student;

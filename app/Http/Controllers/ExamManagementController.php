@@ -131,6 +131,7 @@ class ExamManagementController extends Controller
 
         $this->examService->updateExamResponse(
             answerId: $validated['answer_id'],
+            resultId: $validated['result_id'],
             marks: $validated['marks'],
             comments: $validated['comments'] ?? null
         );
